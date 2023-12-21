@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Projetos {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="content">
+        <div class="row">
+            <div class="col-md-4 mx-auto">
+              <div class="card card-user">
+                <div class="card-body">
+                  <p class="card-text">
+                    <a href="requirements.html">
+                      <div class="author">
+                        <div class="block block-one" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-two" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-three" style="background: linear-gradient(to right, rgb(224, 227, 232) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-four" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                          <!--<img class="rounded-circle account-img" height="150" width="150" src="/static/assets/img/worker.png" style="cursor: pointer;"/>-->
+                          <h2 class="title">
+                            Requisitos
+                          </h2>
+                      </div>
+                    </a>
+                  </p>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mx-auto">
+              <div class="card card-user">
+                <div class="card-body">
+                  <p class="card-text">
+                    <a href="modeling.html">
+                      <div class="author">
+                        <div class="block block-one" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-two" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-three" style="background: linear-gradient(to right, rgb(224, 227, 232) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                        <div class="block block-four" style="background: linear-gradient(to right, rgb(149, 163, 184) 0%, rgba(225, 78, 202, 0) 100%);"></div>
+                          <!--<img class="rounded-circle account-img" height="150" width="150" src="/static/assets/img/office-building.png" style="cursor: pointer;"/>-->
+                          <h2 class="title">
+                            Modelagem
+                          </h2>
+                      </div>
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        demo.initDashboardPageCharts();
+
+    });
+</script>
+
+{% endblock javascripts %}
