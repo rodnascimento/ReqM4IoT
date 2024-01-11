@@ -84,12 +84,21 @@
                                 {{projeto.criador}}
                             </td>
                             <td class="text-center">
+                                {%if projeto.e_o_criador%}
+                                <a class="btn btn-info" data-toggle="modal" data-target="#modalAdicionar{{ projeto.id }}">
+                                    <i class="bi bi-pencil"></i> Adicionar Membro
+                                </a>
                                 <a class="btn btn-primary" data-toggle="modal" data-target="#modalEditar{{ projeto.id }}">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
                                 <a class="btn btn-danger" data-toggle="modal" data-target="#modalExcluir{{ projeto.id }}">
                                     <i class="bi bi-trash"></i> Excluir
                                 </a>
+                                {% else %}
+                                <a class="btn btn-danger" data-toggle="modal" data-target="#modalSair{{ projeto.id }}">
+                                    <i class="bi bi-trash"></i> Sair do Projeto
+                                </a>
+                                {% endif %}
                             </td>
                           </tr>
 
@@ -144,7 +153,60 @@
                                         </div>
                                     </div>
                                 </form>
+                            <form name = "formModalAdicionar" id = "formModalAdicionar" class = "form-horizontal" method="post" action = "{% url 'adicionar_membro' projeto.id %}">
+                                    {% csrf_token %}
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modalAdicionar{{ projeto.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="projeto-nome-editar" class="col-form-label">Username do membro:</label>
+                                                        <div class = "col-sm-8">
+                                                            <input type="text" name="membro" maxlength="100" required id="membro">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                                <button type="submit" class="btn btn-primary">Adicionar</button>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                            
+                                <form name = "formModalSair" id = "formModalSair" class = "form-horizontal" method="post" action = "{% url 'sair_membro' projeto.id %}">
+                                    {% csrf_token %}
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modalSair{{ projeto.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <h1 for="projeto-nome-excluir" class="col-form-label">Você tem certeza que deseja sair do projeto: {{projeto.nome}}</h1>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                                <button type="submit" class="btn btn-primary">Salvar mudanças</button>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </form>
                         {%endfor%}
+                        
                         </tbody>
                       </table>
                     </div>

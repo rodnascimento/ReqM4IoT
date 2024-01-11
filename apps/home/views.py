@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.shortcuts import render, redirect
 from .funcoesutilitarias import *
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 
@@ -61,7 +62,7 @@ def salva_projeto(request):
 def projetos(request):
     
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
-    projetos_usuario = formatar_projetos_usuario(projetos_usuario)
+    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
     return render(request, 'home/index.html',{'projetos': projetos_usuario})
 
 @login_required(login_url="/login/")
@@ -70,6 +71,27 @@ def editar_projeto(request, id):
     projeto = Projetos.objects.get(id=id)
     projeto.nome_projeto = vnome
     projeto.save()
+    return redirect(projetos)
+
+@login_required(login_url="/login/")
+def adicionar_membro(request, id):
+    vnome = request.POST.get("membro")
+    usuario = User.objects.filter(username=vnome).first()
+    if usuario:
+        projeto = Projetos.objects.get(id=id)
+        projeto_usuario = ProjetosUsuarios(user=usuario,projeto=projeto)
+        projeto_usuario.save()
+    else:
+        print("Usuário não existente")
+
+    return redirect(projetos)
+
+@login_required(login_url="/login/")
+def sair_membro(request, id):
+    projeto = Projetos.objects.get(id=id)
+    projeto_usuario = ProjetosUsuarios.objects.get(user=request.user,projeto=projeto)
+    projeto_usuario.delete()
+
     return redirect(projetos)
 
 @login_required(login_url="/login/")

@@ -16,7 +16,7 @@ class Projetos(models.Model):
     def __str__(self):
         return f"DadosJSON #{self.id}"
 
-class ProjetosUsuários(models.Model):
+class ProjetosUsuarios(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     projeto = models.ForeignKey(Projetos, on_delete=models.CASCADE)
