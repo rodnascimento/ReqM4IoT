@@ -19,7 +19,8 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
                         Novo Projeto
                     </button>
-                    
+                    <form name = "formModal" id = "formModal" class = "form-horizontal" method="post" action = "{% url 'salva_projeto'%}">
+                        {% csrf_token %}
                     <!-- Modal -->
                     <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -32,31 +33,38 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="projeto-nome" class="col-form-label">Nome do Projeto:</label>
-                                    <input type="text" class="form-control" id="projeto-nome">
+                                    <label for="projeto-nome" class="col-form-label" for = "projeto-nome">Nome do Projeto:</label>
+                                    <div class = "col-sm-8">
+                                        <input type="text" name="projeto-nome" maxlength="100" required id="projeto-nome">
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <a href="choice.html">
-                                <button type="button" class="btn btn-primary">Salvar mudanças</button>
-                            </a>
+                            <button type="submit" class="btn btn-primary">Salvar mudanças</button>
                             </div>
                         </div>
                         </div>
                     </div>
+                </form>
+
+
                     <div class="table-responsive">
                       <table class="table tablesorter " id="">
                         <thead class=" text-primary">
                           <tr>
-                            <th>
-                              Nome
+                            <th class="text-center">
+                              Nome do Projeto
                             </th>
-                            <th>
+                            <th class="text-center">
                               Data
                             </th>
-                            <th>
-                              Status
+                            <th class="text-center">
+                                Criador
+                              </th>
+                            <th class="text-center">
+                              Ações
                             </th>
                             <th class="text-center">
                               
@@ -64,91 +72,79 @@
                           </tr>
                         </thead>
                         <tbody>
+                        {% for projeto in projetos %}
                           <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
+                            <td class="text-center">
+                              {{ projeto.nome }}
                             </td>
                             <td class="text-center">
-                              Download
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
+                                {{projeto.criacao}}
                             </td>
                             <td class="text-center">
-                              Download
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
+                                {{projeto.criador}}
                             </td>
                             <td class="text-center">
-                              Download
+                                <a class="btn btn-primary" data-toggle="modal" data-target="#modalEditar{{ projeto.id }}">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a class="btn btn-danger" data-toggle="modal" data-target="#modalExcluir{{ projeto.id }}">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </a>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
-                            </td>
-                            <td class="text-center">
-                              Download
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
-                            </td>
-                            <td class="text-center">
-                              Download
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Dakota Rice
-                            </td>
-                            <td>
-                              00\00\0000
-                            </td>
-                            <td>
-                              OK
-                            </td>
-                            <td class="text-center">
-                              Download
-                            </td>
-                          </tr>
-                          
+
+                          <form name = "formModalEditar" id = "formModalEditar" class = "form-horizontal" method="post" action = "{% url 'editar_projeto' projeto.id %}">
+                            {% csrf_token %}
+                                <!-- Modal -->
+                                <div class="modal fade" id="modalEditar{{ projeto.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="projeto-nome-editar" class="col-form-label">Nome do Projeto:</label>
+                                                <div class = "col-sm-8">
+                                                    <input type="text" name="projeto-nome" maxlength="100" required id="projeto-nome-editar" value = "{{projeto.nome}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                        <button type="submit" class="btn btn-primary">Salvar mudanças</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form name = "formModalExcluir" id = "formModalExcluir" class = "form-horizontal" method="post" action = "{% url 'excluir_projeto' projeto.id %}">
+                                {% csrf_token %}
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="modalExcluir{{ projeto.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <h1 for="projeto-nome-excluir" class="col-form-label">Você tem certeza que deseja excluir o projeto: {{projeto.nome}}:</h1>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                            <button type="submit" class="btn btn-primary">Salvar mudanças</button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </form>
+                        {%endfor%}
                         </tbody>
                       </table>
                     </div>
