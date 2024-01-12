@@ -1,9 +1,31 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Projetos {% endblock %} 
+{% block title %} Modelagem {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    /* Estilos CSS para a barra lateral */
+    .sidebar_modeling {
+        width: 200px;
+        height: 100%;
+        background-color: #f0f0f0;
+        float: left;
+    }
+    .toolButton {
+        width: 180px;
+        padding: 10px;
+        margin: 10px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        text-align: center;
+    }
+    #graphContainer {
+        margin-left: 220px; /* Adapte a margem para acomodar a barra lateral */
+    }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -15,397 +37,779 @@
                     <h4 class="card-title">Modelagem</h4>
                   </div>
                   <div class="card-body">
-                    <div class="table-responsive">
-                      
+                    <div class="sidebar_modeling">
+                        <div class="toolButton" id="classButton">Adicionar Classe</div>
+                        <!--<div class="toolButton" id="associationButton">Adicionar Associação</div>-->
+                        <div class="toolButton" id="addUseCaseButton">Adicionar Caso de Uso</div>
+                        <div class="toolButton" id="addActorButton">Adicionar Ator</div>
+                        <div class="toolButton" id="addObjectIoTButton">Adicionar Objeto IoT</div>
+                        <div class="toolButton" id="addSensorButton">Adicionar Sensor</div>
+                        <div class="toolButton" id="addActuatorButton">Adicionar Atuador</div>
+                        <div class="toolButton" id="addContainerStateButton">Adicionar Container Maquina de Estado</div>
+                        <div class="toolButton" id="addStateButton">Adicionar Estado Simples</div>
+                        <div class="toolButton" id="addStartStateButton">Adicionar Estado Inicial</div>
+                        <div class="toolButton" id="addEndStateButton">Adicionar Estado Final</div>
+                        <div class="toolButton" id="addObjectButton">Adicionar Objeto</div>
+                        <div class="toolButton" id="addValueTypeButton">Adicionar ValueType</div>
+                        <div class="toolButton" id="addBlockButton">Adicionar Bloco</div>
+                        <div class="toolButton" id="addObjectLifeLineButton">Adicionar Objeto Linha de Vida</div>
+                        <div class="toolButton" id="addActorLifeLineButton">Adicionar Ator Linha de Vida</div>
+                        <div class="toolButton" id="addActivationBarButton">Adicionar Barra de Ativação</div>
+                        <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
                     </div>
+                    <div id="graphContainer" style="width: calc(100% - 220px); height: 500px; border: solid;"></div>
+                    <button id="saveButton">Salvar Diagrama</button>
+                    <button id="loadButton">Carregar Diagrama</button>
+                    <div class="table-responsive">
+                       <!-- Botão para acionar modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
+                            Novo Diagrama
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document" style="max-width: 1200px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
+                                        <input type="text" class="form-control" id="projeto-nome">
+                                        <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
+                                        <select>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                <a href="choice.html">
+                                    <button type="button" class="btn btn-primary">Salvar diagrama</button>
+                                </a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table tablesorter " id="">
+                          <thead class=" text-primary">
+                            <tr>
+                              <th>
+                                ID
+                              </th>
+                              <th>
+                                Tipo
+                              </th>
+                              <th>
+                                Nome
+                              </th>
+                              <th class="text-center">
+                                
+                              </th>
+                              <th class="text-center">
+                                
+                              </th>
+                              <th class="text-center">
+                                
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                Dakota Rice
+                              </td>
+                              <td>
+                                00\00\0000
+                              </td>
+                              <td>
+                                OK
+                              </td>
+                              <td class="text-center">
+                                <i class="tim-icons icon-upload"></i>
+                              </td>
+                              <td class="text-center">
+                                <i class="tim-icons icon-pencil"></i>
+                              </td>
+                              <td class="text-center">
+                                <i class="tim-icons icon-trash-simple"></i>                                
+                              </td>
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
                   </div>
                 </div>
               </div>
-            <!--<div class="col-12">
-                <div class="card card-chart">
-                    <div class="card-header ">
-                        <div class="row">
-                            <div class="col-sm-6 text-left">
-                                <h5 class="card-category">Total Shipments</h5>
-                                <h2 class="card-title">Performance</h2>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                                    <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                                        <input type="radio" name="options" checked>
-                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Accounts</span>
-                                        <span class="d-block d-sm-none">
-                        <i class="tim-icons icon-single-02"></i>
-                    </span>
-                                    </label>
-                                    <label class="btn btn-sm btn-primary btn-simple" id="1">
-                                        <input type="radio" class="d-none d-sm-none" name="options">
-                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Purchases</span>
-                                        <span class="d-block d-sm-none">
-                        <i class="tim-icons icon-gift-2"></i>
-                    </span>
-                                    </label>
-                                    <label class="btn btn-sm btn-primary btn-simple" id="2">
-                                        <input type="radio" class="d-none" name="options">
-                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Sessions</span>
-                                        <span class="d-block d-sm-none">
-                        <i class="tim-icons icon-tap-02"></i>
-                    </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-area">
-                            <canvas id="chartBig1"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card card-chart">
-                    <div class="card-header">
-                        <h5 class="card-category">Total Shipments</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-area">
-                            <canvas id="chartLinePurple"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card card-chart">
-                    <div class="card-header">
-                        <h5 class="card-category">Daily Sales</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-area">
-                            <canvas id="CountryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card card-chart">
-                    <div class="card-header">
-                        <h5 class="card-category">Completed Tasks</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-area">
-                            <canvas id="chartLineGreen"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="card card-tasks">
-                    <div class="card-header ">
-                        <h6 class="title d-inline">Tasks(5)</h6>
-                        <p class="card-category d-inline">today</p>
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-link dropdown-toggle btn-icon"
-                                    data-toggle="dropdown">
-                                <i class="tim-icons icon-settings-gear-63"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#pablo">Action</a>
-                                <a class="dropdown-item" href="#pablo">Another action</a>
-                                <a class="dropdown-item" href="#pablo">Something else</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body ">
-                        <div class="table-full-width table-responsive">
-                            <table class="table">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Update the Documentation</p>
-                                        <p class="text-muted">Dwuamish Head, Seattle, WA 8:47 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">GDPR Compliance</p>
-                                        <p class="text-muted">The GDPR is a regulation that requires businesses to
-                                            protect the personal data and privacy of Europe citizens for
-                                            transactions that occur within EU member states.</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Solve the issues</p>
-                                        <p class="text-muted">Fifty percent of all respondents said they would be
-                                            more likely to shop at a company </p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Release v2.0.0</p>
-                                        <p class="text-muted">Ra Ave SW, Seattle, WA 98116, SUA 11:19 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Export the processed files</p>
-                                        <p class="text-muted">The report also shows that consumers will not easily
-                                            forgive a company once a breach exposing their personal data
-                                            occurs. </p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="">
-                                                <span class="form-check-sign">
-                            <span class="check"></span>
-                            </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="title">Arival at export process</p>
-                                        <p class="text-muted">Capitol Hill, Seattle, WA 12:34 AM</p>
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title="" class="btn btn-link"
-                                                data-original-title="Edit Task">
-                                            <i class="tim-icons icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12">
-                <div class="card ">
-                    <div class="card-header">
-                        <h4 class="card-title"> Simple Table</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table tablesorter " id="">
-                                <thead class=" text-primary">
-                                <tr>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Country
-                                    </th>
-                                    <th>
-                                        City
-                                    </th>
-                                    <th class="text-center">
-                                        Salary
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        Dakota Rice
-                                    </td>
-                                    <td>
-                                        Niger
-                                    </td>
-                                    <td>
-                                        Oud-Turnhout
-                                    </td>
-                                    <td class="text-center">
-                                        $36,738
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Minerva Hooper
-                                    </td>
-                                    <td>
-                                        Curaçao
-                                    </td>
-                                    <td>
-                                        Sinaai-Waas
-                                    </td>
-                                    <td class="text-center">
-                                        $23,789
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Sage Rodriguez
-                                    </td>
-                                    <td>
-                                        Netherlands
-                                    </td>
-                                    <td>
-                                        Baileux
-                                    </td>
-                                    <td class="text-center">
-                                        $56,142
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Philip Chaney
-                                    </td>
-                                    <td>
-                                        Korea, South
-                                    </td>
-                                    <td>
-                                        Overland Park
-                                    </td>
-                                    <td class="text-center">
-                                        $38,735
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Doris Greene
-                                    </td>
-                                    <td>
-                                        Malawi
-                                    </td>
-                                    <td>
-                                        Feldkirchen in Kärnten
-                                    </td>
-                                    <td class="text-center">
-                                        $63,542
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Mason Porter
-                                    </td>
-                                    <td>
-                                        Chile
-                                    </td>
-                                    <td>
-                                        Gloucester
-                                    </td>
-                                    <td class="text-center">
-                                        $78,615
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Jon Porter
-                                    </td>
-                                    <td>
-                                        Portugal
-                                    </td>
-                                    <td>
-                                        Gloucester
-                                    </td>
-                                    <td class="text-center">
-                                        $98,615
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script src="
+https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
+"></script>
+
+<script>
+    // Inicialização do mxGraph
+    const container = document.getElementById('graphContainer');
+    const graph = new mxGraph(container);
+
+    const parent = graph.getDefaultParent();
+    
+
+    let source, target;
+    let creatingEdge = false;
+
+    function createGraph(container) {
+
+        graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+            const cell = evt.getProperty('cell');
+            if (cell && cell.isVertex()) {
+                if (!source) {
+                    source = cell;
+                } else if (!target && cell !== source) {
+                    target = cell;
+                    createEdge();
+                }
+            }
+        });
+
+    }
+
+    function createEdge() {
+        graph.getModel().beginUpdate();
+        try {
+            const edge = graph.insertEdge(graph.getDefaultParent(), null, 'Associação', source, target);
+            edge.getGeometry().points = [new mxPoint(source.getGeometry().x + source.getGeometry().width / 2, source.getGeometry().y + source.getGeometry().height / 2),
+                new mxPoint(target.getGeometry().x + target.getGeometry().width / 2, target.getGeometry().y + target.getGeometry().height / 2)];
+            edge.setConnectable(false);
+            source = null;
+            target = null;
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    }
+
+    //cria Class
+    document.getElementById('classButton').addEventListener('click', function() {
+        graph.getModel().beginUpdate();
+        try {
+            const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Classe', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
+            vertex.setConnectable(false);
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    });
+
+    //Botão Caso de Uso
+    document.getElementById('addUseCaseButton').addEventListener('click', function() {
+        graph.getModel().beginUpdate();
+        try {
+            const vertex = graph.insertVertex( parent,  null,  'Caso de Uso',  180,  180,  120,  80,  mxConstants.STYLE_SHAPE + '=ellipse;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
+            vertex.setConnectable(false);
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    });
+
+    //Botão Ator
+    document.getElementById('addActorButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 80; // Largura do ícone de ator
+        const height = 120; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/actor.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Ator',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, height);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Objeto IoT
+    document.getElementById('addObjectIoTButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 80; // Largura do ícone de ator
+        const height = 120; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/iotobject.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Objeto IoT',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, height);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Sensor
+    document.getElementById('addSensorButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 80; // Largura do ícone de ator
+        const height = 120; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/sensor.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Sensor',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, height);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Atuador
+    document.getElementById('addActuatorButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 80; // Largura do ícone de ator
+        const height = 120; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/actuator.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Atuador',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, height);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Container ME
+    document.getElementById('addContainerStateButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 0; // Posição X
+        const y = 0; // Posição Y
+        const width = 480; // Largura do ícone de ator
+        const height = 340; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/containerState.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'sm',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;align=left;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Estado Simples
+    document.getElementById('addStateButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 120; // Largura do ícone de ator
+        const height = 40; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/state.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Estado Simples',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Estado Inicial
+    document.getElementById('addStartStateButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 40; // Largura do ícone de ator
+        const height = 30; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/startState.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        '',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Estado Final
+    document.getElementById('addEndStateButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 40; // Largura do ícone de ator
+        const height = 30; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/endState.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        '',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão Objeto
+    document.getElementById('addObjectButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 460; // Largura do ícone de ator
+        const height = 340; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/stateThing.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Objeto',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+    });
+
+    //Botão ValueType
+    document.getElementById('addValueTypeButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+
+        // Inserindo um Value Type (retângulo)
+        const valueType = graph.insertVertex(
+        parent,
+        null,
+        '', // Nome ou rótulo do Value Type
+        100,
+        100,
+        210,
+        150,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        valueType.setVertex(true); // Define como um vértice
+        valueType.setConnectable(false); // Define como não conectável
+
+        // Inserindo propriedades dentro do Value Type
+        const property1 = graph.insertVertex(
+        valueType,
+        null,
+        'Object IoT/Sensor/Actuator', // Propriedade 1 (Nome: Tipo)
+        0,
+        0,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        const property2 = graph.insertVertex(
+        valueType,
+        null,
+        'values', // Propriedade 2 (Nome: Tipo)
+        0,
+        50,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        const property3 = graph.insertVertex(
+        valueType,
+        null,
+        'properties', // Propriedade 2 (Nome: Tipo)
+        0,
+        100,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        property1.setVertex(true); // Define como um vértice
+        property1.setConnectable(false); // Define como não conectável
+
+        property2.setVertex(true); // Define como um vértice
+        property2.setConnectable(false); // Define como não conectável
+
+        property3.setVertex(true); // Define como um vértice
+        property3.setConnectable(false); // Define como não conectável
+
+
+    });
+
+    //Botão ValueType
+    document.getElementById('addBlockButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+
+        // Inserindo um Value Type (retângulo)
+        const valueType = graph.insertVertex(
+        parent,
+        null,
+        '', // Nome ou rótulo do Value Type
+        100,
+        100,
+        210,
+        100,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        valueType.setVertex(true); // Define como um vértice
+        valueType.setConnectable(false); // Define como não conectável
+
+        // Inserindo propriedades dentro do Value Type
+        const property1 = graph.insertVertex(
+        valueType,
+        null,
+        'Block', // Propriedade 1 (Nome: Tipo)
+        0,
+        0,
+        210,
+        20,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        const property2 = graph.insertVertex(
+        valueType,
+        null,
+        'namespace', // Propriedade 2 (Nome: Tipo)
+        0,
+        20,
+        210,
+        90,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        property1.setVertex(true); // Define como um vértice
+        property1.setConnectable(false); // Define como não conectável
+
+        property2.setVertex(true); // Define como um vértice
+        property2.setConnectable(false); // Define como não conectável
+
+
+    });
+
+    //Botão Objeto Linha de Vida
+    document.getElementById('addObjectLifeLineButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 180; // Largura do ícone de ator
+        const height = 350; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/objectlifeline.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Object IoT/Sensor/Actuator',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+
+
+    });
+
+    //Botão Ator Linha de Vida
+    document.getElementById('addActorLifeLineButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; // Posição X
+        const y = 100; // Posição Y
+        const width = 180; // Largura do ícone de ator
+        const height = 350; // Altura do ícone de ator
+
+        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        const actorIconUrl = '../../static/assets/img/actorlifeline.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        'Ator',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, 35);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+
+        // Atualiza o grafo
+        graph.refresh();
+
+        vertex.setVertex(true); // Define como um vértice
+        vertex.setConnectable(false); // Define como não conectável
+
+
+    });
+
+    //cria Barra de ativação
+    document.getElementById('addActivationBarButton').addEventListener('click', function() {
+        graph.getModel().beginUpdate();
+        try {
+            const vertex = graph.insertVertex(graph.getDefaultParent(), null, '', 100, 100, 20, 160, 'color:white;fillColor=#FFFFFF;strokeColor=#000000;');
+            vertex.setConnectable(false);
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    });
+
+    document.getElementById('associationButton').addEventListener('click', function() {
+        creatingEdge = true;
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        createGraph(document.getElementById('graphContainer'));
+    });
+
+
+
+    graph.addListener(mxEvent.CLICK, function(sender, evt) {
+        const cell = evt.getProperty('cell');
+        if (cell !== null && cell.isVertex()) {
+            console.log('Clicou no nó:', cell.value);
+        }
+    });
+
+    
+
+    // Enviar dados do gráfico para o backend (Django) via AJAX para salvar
+    document.getElementById('saveButton').addEventListener('click', function() {
+        const data = mxUtils.getXml(graph.getModel());
+        fetch('/save-graph-data/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ data: data })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Erro ao salvar o diagrama:', error);
+        });
+    });
+
+    // Carregar dados do gráfico do backend (Django) via AJAX
+    document.getElementById('loadButton').addEventListener('click', function() {
+        fetch('/load-graph-data/')
+        .then(response => response.json())
+        .then(data => {
+            // Carregar dados no gráfico
+            if (data && data.data) {
+                const xmlDoc = mxUtils.parseXml(data.data);
+                const codec = new mxCodec(xmlDoc);
+                codec.decode(xmlDoc.documentElement, graph.getModel());
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar o diagrama:', error);
+        });
+    });
+
+    // Função para obter o token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
 
 <script>
     $(document).ready(function () {
