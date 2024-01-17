@@ -18,6 +18,12 @@ urlpatterns = [
     path('sair_membro/<int:id>',views.sair_membro, name='sair_membro'),
     path('escolha/<int:id>',views.escolha, name='escolha'),
     path('requisitos',views.requirements, name='requisitos'),
+    path('processamento_requisito',views.processamento_requisito, name='processamento_requisito'),
+    path('salvar_requisito/<int:id>',views.salvar_requisito, name='salvar_requisito'),
+    path('excluir_requisito/<int:id>/<int:id_requisito>',views.excluir_requisito, name='excluir_requisito'),
+    path('editar_requisito/<int:id>/<int:id_requisito>',views.editar_requisito, name='editar_requisito'),
+    path('processamento_requisito_editar',views.processamento_requisito_editar, name='processamento_requisito_editar'),
+
     path('modelagem',views.modeling, name='modelagem')
 
     # Matches any html file
