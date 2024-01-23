@@ -142,18 +142,29 @@ def requirements(request):
 @login_required(login_url="/login/")
 def processamento_requisito(request):
     requisito  = request.POST.get('requisito', '')
-    print(requisito)
-    if request.method == 'POST':
+    arquivo_requisitos = request.FILES.get('arquivo_requisitos')
+    if arquivo_requisitos:
+        requisitos = tratar_requisitos(arquivo_requisitos)
+        data_sintatico, headings_sintatico, requisitos = caminho(1,requisitos)
+        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,requisitos)
+    
+    else:
+
         requisito  = request.POST.get('requisito', '')
-        data_sintatico, headings_sintatico, requisitos = caminho(1,["Req 1:"+requisito])
-        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,["Req 1:"+requisito])
+        if request.method == 'POST':
+            requisito  = request.POST.get('requisito', '')
+            data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
+            data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
+    
     conteudo_sintatico = ""
     for dado in data_sintatico:
         dados = dado[1]
+        requisito = dado[0]
         conteudo_sintatico = conteudo_sintatico+"<tr>"
+        conteudo_sintatico=conteudo_sintatico+f"<td>{requisito}</td>"
         for campo in dados:
             if campo:
                 conteudo_sintatico = conteudo_sintatico+"<td><i class='fas fa-times'></i></td>"
@@ -166,7 +177,9 @@ def processamento_requisito(request):
     conteudo_ambiguidade = ""
     for dado in data_ambiguidade:
         dados = dado[1]
+        requisito = dado[0]
         conteudo_ambiguidade = conteudo_ambiguidade+"<tr>"
+        conteudo_ambiguidade=conteudo_ambiguidade+f"<td>{requisito}</td>"
         for campo in dados:
             if campo:
                 conteudo_ambiguidade = conteudo_ambiguidade+"<td><i class='fas fa-times'></i></td>"
@@ -176,26 +189,41 @@ def processamento_requisito(request):
 
     html_code = f'''
         <div class="table-responsive">
-            <table class="table tablesorter " id="">
             <h4>Quanto a análise sintática temos: </h4>
+            <table class="table tablesorter ">
+            
             <thead class=" text-primary">
-                <tr>
-                {titulo_sintatico}
-                </tr>
-            </thead>
-            <tbody>
-            {conteudo_sintatico}
-        </div>
-        <div class="table-responsive">
-            <table class="table tablesorter " id="">
+                
+                    <tr>
+                    <th>
+                    Requisito
+                    </th>
+                    {titulo_sintatico}
+                    </tr>
+                </thead>
+                <tbody>
+                {conteudo_sintatico}
+                </tbody>
+            </table>
+
             <h4>Quanto a análise de ambiguidade temos: </h4>
+            <table class="table tablesorter ">
+            
             <thead class=" text-primary">
-                <tr>
-                {titulo_ambiguidade}
-                </tr>
-            </thead>
-            <tbody>
-            {conteudo_ambiguidade}
+                
+                    <tr>
+                    <th>
+                    Requisito
+                    </th>
+                    {titulo_ambiguidade}
+                    </tr>
+                </thead>
+                <tbody>
+                {conteudo_ambiguidade}
+                </tbody>
+            </table>
+            
+
         </div>
     '''
     return JsonResponse({'html_code': html_code})
@@ -205,8 +233,8 @@ def processamento_requisito_editar(request):
     requisito  = request.POST.get('requisito', '')
     if request.method == 'POST':
         requisito  = request.POST.get('requisito', '')
-        data_sintatico, headings_sintatico, requisitos = caminho(1,["Req 1:"+requisito])
-        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,["Req 1:"+requisito])
+        data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
+        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
@@ -262,14 +290,24 @@ def processamento_requisito_editar(request):
 
 @login_required(login_url="/login/")
 def salvar_requisito(request, id):
-    requisito  = request.POST.get('requisito', '')
+
+    arquivo_requisitos = request.FILES.get('fileInput')
     projeto = Projetos.objects.get(id=id)
-    dados = json.loads(projeto.dados)
-    dados['requisitos_funcionais'].append(requisito)
-    projeto.dados = json.dumps(dados)
-    projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
+    dados = json.loads(projeto.dados)
+    if arquivo_requisitos:
+        requisitos = tratar_requisitos(arquivo_requisitos)
+        for requisito in requisitos:
+            if (requisito in dados['requisitos_funcionais']) or (requisito in dados['requisitos_funcionais']):
+                pass
+            else:
+                dados['requisitos_funcionais'].append(requisito)
+    else:
+        requisito  = request.POST.get('requisito', '')
+        dados['requisitos_funcionais'].append(requisito)
+    projeto.dados = json.dumps(dados)
+    projeto.save()
     return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
 
 @login_required(login_url="/login/")

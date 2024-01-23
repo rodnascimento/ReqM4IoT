@@ -157,7 +157,6 @@ class AnaliseSintatica:
             return "OK"
     def analise_completa(self):
         for indice,req in enumerate(self.requisitos):
-            req = req.split(':')[1]
             req=re.sub("[! - &;™,]+",' ',req)
             sentences = req.split('.')
             erro = self.arvore_sintatica(sentences,self.passive_voice)
@@ -411,3 +410,14 @@ def obter_requisitos(projeto):
     requisitos = dados["requisitos_funcionais"]
     requisitos = {i:requisito for i,requisito in enumerate(requisitos)}
     return requisitos
+
+def tratar_requisitos(f):
+    if f.name.split('.')[1]=='txt':
+        mensagem = ""
+        mensagem = f.read().decode('utf-8').split('\n')
+        return mensagem
+    elif f.name.split('.')[1]=='docx':
+        import docx2txt as converte
+        txt = converte.process(f.read())
+        return txt.split('\n\n')
+
