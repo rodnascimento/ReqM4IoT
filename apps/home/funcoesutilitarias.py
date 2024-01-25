@@ -28,32 +28,18 @@ def criar_projeto(dados_projeto, id_usuario):
         'requisitos_iot': {}
     }
     try:
-        projeto = Projetos(dados=json.dumps(dados), nome_projeto=dados_projeto['nome'], id_criador=id_usuario)
+        projeto = Projetos(dados=json.dumps(dados), nome_projeto=dados_projeto['nome'],descricao=dados_projeto['descricao'], id_criador=id_usuario)
         projeto.save()
         try: 
             usuario = get_object_or_404(User, pk=id_usuario)
             projeto_usuario = ProjetosUsuarios(user=usuario, projeto=projeto)
             projeto_usuario.save()
         except Exception as e:
-            # Trate o erro de maneira mais específica (ex: log, mensagem)
             print(f"Erro ao deletar projeto: {e}")
-
         return True
     except Exception as e:
-        # Trate o erro de maneira mais específica (ex: log, mensagem)
         print(f"Erro ao criar projeto: {e}")
         return False
-'''
-def deletar_projeto(pk):
-    try:
-        projeto = get_object_or_404(Projetos, pk=pk)
-        projeto.delete()
-        return True
-    except Exception as e:
-        # Trate o erro de maneira mais específica (ex: log, mensagem)
-        print(f"Erro ao deletar projeto: {e}")
-        return False
-'''
 def atualizar_projeto(dados_projeto_original, dados_projeto_novos):
     resultado = Projetos.objects.filter(nome_projeto=dados_projeto_original['nome']).first()
     if resultado:
@@ -76,6 +62,7 @@ def formatar_projetos_usuario(projetos,usuario):
         dados_projeto = get_object_or_404(Projetos, id=id_projeto)
         dados['id'] = id_projeto
         dados['nome']= dados_projeto.nome_projeto
+        dados['descricao']= dados_projeto.descricao
         dados['criacao'] = dados_projeto.criacao.strftime("%d/%m/%Y")
         dados['criador'] = get_object_or_404(User, id=dados_projeto.id_criador).username
         dados['e_o_criador'] = usuario.id==dados_projeto.id_criador
@@ -407,8 +394,16 @@ def caminho(escolha, requisitos):
 
 def obter_requisitos(projeto):
     dados = json.loads(projeto.dados)
-    requisitos = dados["requisitos_funcionais"]
-    requisitos = {i:requisito for i,requisito in enumerate(requisitos)}
+    requisitos={}
+    funcionais = dados["requisitos_funcionais"]
+    requisitos = {i:[requisito, 'Functional'] for i,requisito in enumerate(funcionais)}
+
+    classes = dados["requisitos_nao_funcionais"].keys()
+    indice=len(funcionais)
+    for classe in classes:
+        for requisito in dados["requisitos_nao_funcionais"][classe]:
+            requisitos[indice]=[requisito, classe]
+            indice=indice+1
     return requisitos
 
 def tratar_requisitos(f):

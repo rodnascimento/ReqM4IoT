@@ -13,6 +13,7 @@ class Projetos(models.Model):
     nome_projeto = models.TextField()
     criacao = models.DateTimeField(default=timezone.now)
     id_criador = models.IntegerField(default=1)
+    descricao = models.TextField(default="")
     def __str__(self):
         return f"DadosJSON #{self.id}"
 
