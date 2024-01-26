@@ -8,12 +8,16 @@
     /* Estilos CSS para a barra lateral */
     .sidebar_modeling {
         width: 200px;
-        height: 100%;
+        height: 480px;
         background-color: #f0f0f0;
         float: left;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
     }
+
     .toolButton {
-        width: 180px;
+        width: 70px;
         padding: 10px;
         margin: 10px;
         cursor: pointer;
@@ -24,6 +28,7 @@
     #graphContainer {
         margin-left: 220px; /* Adapte a margem para acomodar a barra lateral */
     }
+    
 </style>
 {% endblock stylesheets %}
 
@@ -38,28 +43,45 @@
                   </div>
                   <div class="card-body">
                     <div class="sidebar_modeling">
-                        <div class="toolButton" id="classButton">Adicionar Classe</div>
+                        <div class="toolButton" id="classButton"><img src="../../static/assets/img/class.png" alt="Classe" title="Classe"></div>
                         <!--<div class="toolButton" id="associationButton">Adicionar Associação</div>-->
-                        <div class="toolButton" id="addUseCaseButton">Adicionar Caso de Uso</div>
-                        <div class="toolButton" id="addActorButton">Adicionar Ator</div>
-                        <div class="toolButton" id="addObjectIoTButton">Adicionar Objeto IoT</div>
-                        <div class="toolButton" id="addSensorButton">Adicionar Sensor</div>
-                        <div class="toolButton" id="addActuatorButton">Adicionar Atuador</div>
-                        <div class="toolButton" id="addContainerStateButton">Adicionar Container Maquina de Estado</div>
-                        <div class="toolButton" id="addStateButton">Adicionar Estado Simples</div>
-                        <div class="toolButton" id="addStartStateButton">Adicionar Estado Inicial</div>
-                        <div class="toolButton" id="addEndStateButton">Adicionar Estado Final</div>
-                        <div class="toolButton" id="addObjectButton">Adicionar Objeto</div>
-                        <div class="toolButton" id="addValueTypeButton">Adicionar ValueType</div>
-                        <div class="toolButton" id="addBlockButton">Adicionar Bloco</div>
-                        <div class="toolButton" id="addObjectLifeLineButton">Adicionar Objeto Linha de Vida</div>
-                        <div class="toolButton" id="addActorLifeLineButton">Adicionar Ator Linha de Vida</div>
-                        <div class="toolButton" id="addActivationBarButton">Adicionar Barra de Ativação</div>
+                        <div class="toolButton" id="addUseCaseButton"><img src="../../static/assets/img/usecase.png" alt="Caso de Uso" title="Caso de Uso"></div>
+                        <div class="toolButton" id="addActorButton"><img src="../../static/assets/img/actor.png" alt="Ator" title="Ator"></div>
+                        <div class="toolButton" id="addObjectIoTButton"><img src="../../static/assets/img/iotobject.png" alt="Objeto IoT" title="Objeto IoT"></div>
+                        <div class="toolButton" id="addSensorButton"><img src="../../static/assets/img/sensor.png" alt="Sensor" title="Sensor"></div>
+                        <div class="toolButton" id="addActuatorButton"><img src="../../static/assets/img/actuator.png" alt="Atuador" title="Atuador"></div>
+                        <div class="toolButton" id="addContainerStateButton"><img src="../../static/assets/img/containerState.png" alt="Container" title="Container"></div>
+                        <div class="toolButton" id="addStateButton"><img src="../../static/assets/img/state.png" alt="Estado" title="Estado"></div>
+                        <div class="toolButton" id="addStartStateButton"><img src="../../static/assets/img/startState.png" alt="Estado Inicial" title="Estado Inicial"></div>
+                        <div class="toolButton" id="addDecisionButton"><img src="../../static/assets/img/decision.png" alt="Tomada de decisão" title="Tomada de decisão"></div>
+                        <div class="toolButton" id="addEndStateButton"><img src="../../static/assets/img/endState.png" alt="Estado Final" title="Estado Final"></div>
+                        <div class="toolButton" id="addObjectButton"><img src="../../static/assets/img/stateThing.png" alt="Objeto" title="Objeto"></div>
+                        <div class="toolButton" id="addValueTypeButton"><img src="../../static/assets/img/valuetype.png" alt="Tipo Valor" title="Tipo Valor"></div>
+                        <div class="toolButton" id="addBlockButton"><img src="../../static/assets/img/block.png" alt="Bloco" title="Bloco"></div>
+                        <div class="toolButton" id="addObjectLifeLineButton"><img src="../../static/assets/img/objectlifeline.png" height="70px" alt="Linha de Vida" title="Linha de Vida"></div>
+                        <div class="toolButton" id="addActorLifeLineButton"><img src="../../static/assets/img/actorlifeline.png" height="70px" alt="Ator Linha de Vida" title="Ator Linha de Vida"></div>
+                        <div class="toolButton" id="addActivationBarButton"><img src="../../static/assets/img/ativacao.png" height="70px"alt="Barra de Ativação" title="Barra de Ativação"></div>
+                        <div class="toolButton" id="addLine1Button"><img src="../../static/assets/img/linha1.png" height="70px"  alt="linha" title="Linha"></div>
+                        <div class="toolButton" id="addLine2Button"><img src="../../static/assets/img/linha2.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine3Button"><img src="../../static/assets/img/linha3.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine4Button"><img src="../../static/assets/img/linha4.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine5Button"><img src="../../static/assets/img/linha5.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine6Button"><img src="../../static/assets/img/linha6.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine7Button"><img src="../../static/assets/img/linha7.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine8Button"><img src="../../static/assets/img/linha8.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine9Button"><img src="../../static/assets/img/linha9.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine10Button"><img src="../../static/assets/img/linha10.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine11Button"><img src="../../static/assets/img/linha11.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="toolButton" id="addLine12Button"><img src="../../static/assets/img/linha12.png" height="70px"alt="linha" title="linha"></div>
                         <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
                     </div>
                     <div id="graphContainer" style="width: calc(100% - 220px); height: 500px; border: solid;"></div>
                     <button id="saveButton">Salvar Diagrama</button>
                     <button id="loadButton">Carregar Diagrama</button>
+                    <button id="downloadXMLButton">Download em XML</button>
+                    <button id="downloadPDFButton">Download em PDF</button>
+                    <button id="downloadPNGButton">Download em Imagem</button>
+                    <input type="file" id="fileInput" accept=".xml">
                     <div class="table-responsive">
                        <!-- Botão para acionar modal -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
@@ -154,9 +176,9 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script src="
-https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
-"></script>
+<script src="https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.0/rgbcolor.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.0/canvg.min.js"></script>
 
 <script>
     // Inicialização do mxGraph
@@ -201,35 +223,84 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
 
     //cria Class
     document.getElementById('classButton').addEventListener('click', function() {
-        graph.getModel().beginUpdate();
-        try {
-            const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Classe', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
-            vertex.setConnectable(false);
-        } finally {
-            graph.getModel().endUpdate();
+        const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Classe', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
+        
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
         }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Caso de Uso
     document.getElementById('addUseCaseButton').addEventListener('click', function() {
-        graph.getModel().beginUpdate();
-        try {
-            const vertex = graph.insertVertex( parent,  null,  'Caso de Uso',  180,  180,  120,  80,  mxConstants.STYLE_SHAPE + '=ellipse;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
-            vertex.setConnectable(false);
-        } finally {
-            graph.getModel().endUpdate();
+        const vertex = graph.insertVertex( parent,  null,  'Caso de Uso',  180,  180,  120,  80,  mxConstants.STYLE_SHAPE + '=ellipse;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
+        
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
         }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'open'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=open;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
+       
     });
 
     //Botão Ator
     document.getElementById('addActorButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 80; // Largura do ícone de ator
-        const height = 120; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 80; 
+        const height = 120; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/actor.png';
 
         const vertex = graph.insertVertex(
@@ -249,24 +320,52 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Objeto IoT
     document.getElementById('addObjectIoTButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 80; // Largura do ícone de ator
-        const height = 120; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 80; 
+        const height = 120; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/iotobject.png';
 
         const vertex = graph.insertVertex(
@@ -286,24 +385,52 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        }; 
     });
 
     //Botão Sensor
     document.getElementById('addSensorButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 80; // Largura do ícone de ator
-        const height = 120; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 80; 
+        const height = 120; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/sensor.png';
 
         const vertex = graph.insertVertex(
@@ -323,24 +450,52 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Atuador
     document.getElementById('addActuatorButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 80; // Largura do ícone de ator
-        const height = 120; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 80; 
+        const height = 120; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/actuator.png';
 
         const vertex = graph.insertVertex(
@@ -360,24 +515,117 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
+    });
+
+    //Botão tomada de decisao
+    document.getElementById('addDecisionButton').addEventListener('click', function() {
+        const parent = graph.getDefaultParent();
+        const x = 100; 
+        const y = 100; 
+        const width = 80; 
+        const height = 80; 
+
+        
+        const actorIconUrl = '../../static/assets/img/decision.png';
+
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        '',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + actorIconUrl
+        );
+
+        vertex.geometry.offset = new mxPoint(0, height);
+        vertex.geometry.relative = false;
+        vertex.geometry.anchorPoint = new mxPoint(0, 0);
+        vertex.geometry.relative = false;
+        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
+
+        vertex.style += ';verticalAlign=top;'; 
+
+        
+        graph.refresh();
+
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Container ME
     document.getElementById('addContainerStateButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 0; // Posição X
-        const y = 0; // Posição Y
-        const width = 480; // Largura do ícone de ator
-        const height = 340; // Altura do ícone de ator
+        const x = 0; 
+        const y = 0; 
+        const width = 480; 
+        const height = 340; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/containerState.png';
 
         const vertex = graph.insertVertex(
@@ -397,24 +645,52 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;align=left;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;align=left;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Estado Simples
     document.getElementById('addStateButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 120; // Largura do ícone de ator
-        const height = 40; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 120; 
+        const height = 40; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/state.png';
 
         const vertex = graph.insertVertex(
@@ -429,22 +705,50 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         );
 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Estado Inicial
     document.getElementById('addStartStateButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 40; // Largura do ícone de ator
-        const height = 30; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 40; 
+        const height = 30; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/startState.png';
 
         const vertex = graph.insertVertex(
@@ -459,22 +763,50 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         );
 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Estado Final
     document.getElementById('addEndStateButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 40; // Largura do ícone de ator
-        const height = 30; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 40; 
+        const height = 30; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/endState.png';
 
         const vertex = graph.insertVertex(
@@ -489,22 +821,50 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         );
 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
 
     //Botão Objeto
     document.getElementById('addObjectButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 460; // Largura do ícone de ator
-        const height = 340; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 460; 
+        const height = 340; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/stateThing.png';
 
         const vertex = graph.insertVertex(
@@ -524,13 +884,41 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        }; 
     });
 
     //Botão ValueType
@@ -549,8 +937,7 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
         );
 
-        valueType.setVertex(true); // Define como um vértice
-        valueType.setConnectable(false); // Define como não conectável
+        valueType.setVertex(true); 
 
         // Inserindo propriedades dentro do Value Type
         const property1 = graph.insertVertex(
@@ -586,15 +973,44 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
         );
 
-        property1.setVertex(true); // Define como um vértice
-        property1.setConnectable(false); // Define como não conectável
+        property1.setVertex(true); 
+        property1.setConnectable(false); 
 
-        property2.setVertex(true); // Define como um vértice
-        property2.setConnectable(false); // Define como não conectável
+        property2.setVertex(true); 
+        property2.setConnectable(false); 
 
-        property3.setVertex(true); // Define como um vértice
-        property3.setConnectable(false); // Define como não conectável
+        property3.setVertex(true); 
+        property3.setConnectable(false); 
 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === valueType) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
 
     });
 
@@ -614,8 +1030,7 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
         );
 
-        valueType.setVertex(true); // Define como um vértice
-        valueType.setConnectable(false); // Define como não conectável
+        valueType.setVertex(true); 
 
         // Inserindo propriedades dentro do Value Type
         const property1 = graph.insertVertex(
@@ -640,24 +1055,53 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
         );
 
-        property1.setVertex(true); // Define como um vértice
-        property1.setConnectable(false); // Define como não conectável
+        property1.setVertex(true); 
+        property1.setConnectable(false); 
 
-        property2.setVertex(true); // Define como um vértice
-        property2.setConnectable(false); // Define como não conectável
+        property2.setVertex(true); 
+        property2.setConnectable(false); 
 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === valueType) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
 
     });
 
     //Botão Objeto Linha de Vida
     document.getElementById('addObjectLifeLineButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 180; // Largura do ícone de ator
-        const height = 350; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 90; 
+        const height = 350; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/objectlifeline.png';
 
         const vertex = graph.insertVertex(
@@ -677,13 +1121,42 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
 
 
     });
@@ -691,12 +1164,12 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
     //Botão Ator Linha de Vida
     document.getElementById('addActorLifeLineButton').addEventListener('click', function() {
         const parent = graph.getDefaultParent();
-        const x = 100; // Posição X
-        const y = 100; // Posição Y
-        const width = 180; // Largura do ícone de ator
-        const height = 350; // Altura do ícone de ator
+        const x = 100; 
+        const y = 100; 
+        const width = 45; 
+        const height = 350; 
 
-        // URL do ícone do ator (substitua com sua própria URL de imagem)
+        
         const actorIconUrl = '../../static/assets/img/actorlifeline.png';
 
         const vertex = graph.insertVertex(
@@ -716,27 +1189,371 @@ https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js
         vertex.geometry.relative = false;
         vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
 
-        vertex.style += ';verticalAlign=top;'; // Alinhamento do texto do rótulo
+        vertex.style += ';verticalAlign=top;'; 
 
-        // Atualiza o grafo
+        
         graph.refresh();
 
-        vertex.setVertex(true); // Define como um vértice
-        vertex.setConnectable(false); // Define como não conectável
+        vertex.setVertex(true); 
+        //vertex.setConnectable(false); 
 
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
 
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
+
+    // funcao delete
+    document.addEventListener('keydown', function (e) {
+    if (e.key === 'Delete') {
+        const cells = graph.getSelectionCells();
+
+        if (cells && cells.length > 0) {
+        graph.removeCells(cells);
+        }
+    }
+    });
+
+    // funcao Ctrl+C e Ctrl+V
+    document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey) {
+        if (e.key === 'c' || e.key === 'C') {
+        copyCells();
+        }
+
+        if (e.key === 'v' || e.key === 'V') {
+        pasteCells();
+        }
+    }
+    });
+
+    // Função para copiar células
+    function copyCells() {
+        const cells = graph.getSelectionCells();
+
+        mxClipboard.copy(graph, cells);
+    }
+
+    // Função para colar células
+    function pasteCells() {
+        const cells = mxClipboard.paste(graph);
+
+        if (cells) {
+            graph.addCells(cells);
+        }
+    }
+
 
     //cria Barra de ativação
     document.getElementById('addActivationBarButton').addEventListener('click', function() {
-        graph.getModel().beginUpdate();
-        try {
-            const vertex = graph.insertVertex(graph.getDefaultParent(), null, '', 100, 100, 20, 160, 'color:white;fillColor=#FFFFFF;strokeColor=#000000;');
-            vertex.setConnectable(false);
-        } finally {
-            graph.getModel().endUpdate();
+        const vertex = graph.insertVertex(graph.getDefaultParent(), null, '', 100, 100, 20, 160, 'color:white;fillColor=#FFFFFF;strokeColor=#000000;');
+        
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
         }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
     });
+
+    //cria Linha
+    document.getElementById('addLine1Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    //cria Linha
+    document.getElementById('addLine2Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    //cria Linha
+    document.getElementById('addLine3Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=entityRelationEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine4Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;startArrow=classic;endArrow=classic;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine5Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;endArrow=classic;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine6Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=false;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine7Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'dashed=1;edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=false;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+    
+    document.getElementById('addLine8Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'dashed=1;dashPattern=1 4;edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=false;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine9Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+        
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=diamondThin;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine10Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+        
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'dashed=1;edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=open;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine11Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+        
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'dashed=1;edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    document.getElementById('addLine12Button').addEventListener('click', function() {
+        var vertex1 = graph.insertVertex(parent, '1', 'Vértice 1', 50, 50, 80, 30);
+        var vertex2 = graph.insertVertex(parent, '2', 'Vértice 2', 200, 120, 80, 30);
+        
+        // Crie uma aresta (linha SVG) para conectar os vértices
+        var edge = graph.insertEdge(parent, null, '', vertex1, vertex2, 'edgeStyle=straightEdgeStyle;rounded=0;orthogonalLoop=1;startArrow=diamond;endArrow=classic;strokeColor=#000000;strokeWidth=2;');
+
+        graph.removeCells([vertex1], false);
+        graph.removeCells([vertex2], false);
+        
+
+   
+    });
+
+    //download diagrama
+    document.getElementById('downloadXMLButton').addEventListener('click', function() {
+      // Salva o estado atual do grafo
+      const encoder = new mxCodec();
+      const node = encoder.encode(graph.getModel());
+      const xml = mxUtils.getXml(node);
+
+      // Cria um arquivo Blob
+      const blob = new Blob([xml], { type: 'text/xml' });
+
+      // Cria um objeto URL e inicia o download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'diagrama.xml';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('downloadPDFButton').addEventListener('click', function() {
+     
+    });
+    
+
+    //download png
+    document.getElementById('downloadPNGButton').addEventListener('click', function() {
+        img = new Image(),
+        serializer = new XMLSerializer(),
+        svgStr = serializer.serializeToString(document.getElementById('graphContainer'));
+        
+    img.src = 'data:image/svg+xml;base64,'+window.btoa(svgStr);
+    console.log(img.src)
+    
+    // You could also use the actual string without base64 encoding it:
+    //img.src = "data:image/svg+xml;utf8," + svgStr;
+
+    var canvas = document.createElement("canvas");
+
+    var w=800;
+    var h=400;
+
+    canvas.width = w;
+    canvas.height = h;
+    canvas.getContext("2d").drawImage(img,0,0,w,h);
+    
+    var imgURL = img.src;
+
+var dlLink = document.createElement('a');
+    dlLink.download = "image";
+    dlLink.href = imgURL;
+    dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+
+    document.body.appendChild(dlLink);
+    dlLink.click();
+    document.body.removeChild(dlLink);
+    });
+
+    // Adiciona um ouvinte de eventos para carregar XML
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const xml = e.target.result;
+          loadGraphFromXml(xml);
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    // Função para carregar o gráfico a partir de um XML
+    function loadGraphFromXml(xml) {
+      const doc = mxUtils.parseXml(xml);
+      const codec = new mxCodec(doc);
+      codec.decode(doc.documentElement, graph.getModel());
+    }
 
     document.getElementById('associationButton').addEventListener('click', function() {
         creatingEdge = true;
