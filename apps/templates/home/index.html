@@ -37,9 +37,12 @@
                                     <div class = "col-sm-8">
                                         <input type="text" name="projeto-nome" maxlength="100" required id="projeto-nome">
                                     </div>
-                                    
+                                    <label for="descricao" class="col-form-label" for = "descricao">Descrição do Projeto:</label>
+                                    <div class = "col-sm-8">
+                                        <input type="text" name="descricao" maxlength="200" required id="descricao">
+                                    </div>
                                 </div>
-                            </div>
+                            </div> 
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                             <button type="submit" class="btn btn-primary">Salvar mudanças</button>
@@ -58,8 +61,11 @@
                               Nome do Projeto
                             </th>
                             <th class="text-center">
-                              Data
+                              Descrição do Projeto
                             </th>
+                            <th class="text-center">
+                                Data
+                              </th>
                             <th class="text-center">
                                 Criador
                               </th>
@@ -83,6 +89,9 @@
                             <td class="text-center">
                               {{ projeto.nome }}
                             </td>
+                            <td class="text-center">
+                                {{ projeto.descricao }}
+                              </td>
                             <td class="text-center">
                                 {{projeto.criacao}}
                             </td>
@@ -124,6 +133,10 @@
                                                 <label for="projeto-nome-editar" class="col-form-label">Nome do Projeto:</label>
                                                 <div class = "col-sm-8">
                                                     <input type="text" name="projeto-nome" maxlength="100" required id="projeto-nome-editar" value = "{{projeto.nome}}">
+                                                </div>
+                                                <label for="descricao" class="col-form-label" for = "descricao">Descrição do Projeto:</label>
+                                                <div class = "col-sm-8">
+                                                    <input type="text" name="descricao" maxlength="200" required id="descricao-editar" value = "{{projeto.descricao}}">
                                                 </div>
                                             </div>
                                         </div>

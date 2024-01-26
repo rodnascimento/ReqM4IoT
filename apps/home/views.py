@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 import sys
 sys.path.insert(0, '/home/bruno/ReqM4IoT/ReqM4IoT/apps/home/funcoesutilitarias.py')
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -56,12 +56,12 @@ def pages(request):
 @login_required(login_url="/login/")
 def salva_projeto(request):
     nome = request.POST.get("projeto-nome")
-    criar_projeto({'nome': nome}, request.user.id)
+    descricao = request.POST.get("descricao")
+    criar_projeto({'nome': nome, 'descricao':descricao}, request.user.id)
     return render(request, 'home/choice.html')
 
 @login_required(login_url="/login/")
 def projetos(request):
-    
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
     return render(request, 'home/index.html',{'projetos': projetos_usuario})
@@ -69,8 +69,10 @@ def projetos(request):
 @login_required(login_url="/login/")
 def editar_projeto(request, id):
     vnome = request.POST.get("projeto-nome")
+    descricao = request.POST.get("descricao")
     projeto = Projetos.objects.get(id=id)
     projeto.nome_projeto = vnome
+    projeto.descricao = descricao
     projeto.save()
     return redirect(projetos)
 
@@ -117,13 +119,15 @@ def escolha(request, id):
 def requirements(request):
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    escolha = request.POST.get('escolha', '')
+    
+    escolha = request.POST.get('escolha', projetos_usuario[0]['id'])
     try:
         escolha = Projetos.objects.get(id=escolha)
         nome=escolha.nome_projeto
-        requisitos = obter_requisitos(escolha)
-
-    except:
+        
+        requisitos_funcionais = obter_requisitos(escolha)
+        lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+    except Exception as e:
         dados = {
         'requisitos_funcionais': [],
         'requisitos_nao_funcionais': {},
@@ -135,25 +139,45 @@ def requirements(request):
         escolha=Projetos(dados=json.dumps(dados),nome_projeto="",id_criador=0)
         nome=escolha.nome_projeto
         escolha.id=0
-        requisitos={}
+        requisitos_funcionais={}
     
-    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":requisitos})
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
+    try:
+        requisitos_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
 
 @login_required(login_url="/login/")
 def processamento_requisito(request):
     requisito  = request.POST.get('requisito', '')
-    print(requisito)
-    if request.method == 'POST':
+    arquivo_requisitos = request.FILES.get('arquivo_requisitos')
+    if arquivo_requisitos:
+        requisitos = tratar_requisitos(arquivo_requisitos)
+        data_sintatico, headings_sintatico, requisitos = caminho(1,requisitos)
+        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,requisitos)
+    
+    else:
+
         requisito  = request.POST.get('requisito', '')
-        data_sintatico, headings_sintatico, requisitos = caminho(1,["Req 1:"+requisito])
-        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,["Req 1:"+requisito])
+        if request.method == 'POST':
+            requisito  = request.POST.get('requisito', '')
+            data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
+            data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
+    
     conteudo_sintatico = ""
     for dado in data_sintatico:
         dados = dado[1]
+        requisito = dado[0]
         conteudo_sintatico = conteudo_sintatico+"<tr>"
+        conteudo_sintatico=conteudo_sintatico+f"<td>{requisito}</td>"
         for campo in dados:
             if campo:
                 conteudo_sintatico = conteudo_sintatico+"<td><i class='fas fa-times'></i></td>"
@@ -166,7 +190,9 @@ def processamento_requisito(request):
     conteudo_ambiguidade = ""
     for dado in data_ambiguidade:
         dados = dado[1]
+        requisito = dado[0]
         conteudo_ambiguidade = conteudo_ambiguidade+"<tr>"
+        conteudo_ambiguidade=conteudo_ambiguidade+f"<td>{requisito}</td>"
         for campo in dados:
             if campo:
                 conteudo_ambiguidade = conteudo_ambiguidade+"<td><i class='fas fa-times'></i></td>"
@@ -176,26 +202,41 @@ def processamento_requisito(request):
 
     html_code = f'''
         <div class="table-responsive">
-            <table class="table tablesorter " id="">
             <h4>Quanto a análise sintática temos: </h4>
+            <table class="table tablesorter ">
+            
             <thead class=" text-primary">
-                <tr>
-                {titulo_sintatico}
-                </tr>
-            </thead>
-            <tbody>
-            {conteudo_sintatico}
-        </div>
-        <div class="table-responsive">
-            <table class="table tablesorter " id="">
+                
+                    <tr>
+                    <th>
+                    Requisito
+                    </th>
+                    {titulo_sintatico}
+                    </tr>
+                </thead>
+                <tbody>
+                {conteudo_sintatico}
+                </tbody>
+            </table>
+
             <h4>Quanto a análise de ambiguidade temos: </h4>
+            <table class="table tablesorter ">
+            
             <thead class=" text-primary">
-                <tr>
-                {titulo_ambiguidade}
-                </tr>
-            </thead>
-            <tbody>
-            {conteudo_ambiguidade}
+                
+                    <tr>
+                    <th>
+                    Requisito
+                    </th>
+                    {titulo_ambiguidade}
+                    </tr>
+                </thead>
+                <tbody>
+                {conteudo_ambiguidade}
+                </tbody>
+            </table>
+            
+
         </div>
     '''
     return JsonResponse({'html_code': html_code})
@@ -203,10 +244,11 @@ def processamento_requisito(request):
 def processamento_requisito_editar(request):
     chave  = request.POST.get('chave', '')
     requisito  = request.POST.get('requisito', '')
+
     if request.method == 'POST':
         requisito  = request.POST.get('requisito', '')
-        data_sintatico, headings_sintatico, requisitos = caminho(1,["Req 1:"+requisito])
-        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,["Req 1:"+requisito])
+        data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
+        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
@@ -262,38 +304,71 @@ def processamento_requisito_editar(request):
 
 @login_required(login_url="/login/")
 def salvar_requisito(request, id):
-    requisito  = request.POST.get('requisito', '')
+
+    arquivo_requisitos = request.FILES.get('fileInput')
     projeto = Projetos.objects.get(id=id)
-    dados = json.loads(projeto.dados)
-    dados['requisitos_funcionais'].append(requisito)
-    projeto.dados = json.dumps(dados)
-    projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
+    dados = json.loads(projeto.dados)
+    if arquivo_requisitos:
+        requisitos = tratar_requisitos(arquivo_requisitos)
+        for requisito in requisitos:
+            if (requisito in dados['requisitos_funcionais']) or (requisito in dados['requisitos_funcionais']):
+                pass
+            else:
+                dados['requisitos_funcionais'].append(requisito)
+    else:
+        requisito  = request.POST.get('requisito', '')
+        dados['requisitos_funcionais'].append(requisito)
+    projeto.dados = json.dumps(dados)
+    projeto.save()
+    return redirect(reverse('requisitos'))
+    #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
 
 @login_required(login_url="/login/")
 def excluir_requisito(request, id, id_requisito):
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
-    dados['requisitos_funcionais'].pop(id_requisito)
+    requisito = obter_requisitos(projeto)[id_requisito][0]
+    if id_requisito< len(dados['requisitos_funcionais']):
+        dados['requisitos_funcionais'].pop(id_requisito)
+    else:
+        for chave,valor in dados['requisitos_nao_funcionais'].items():
+            if requisito in valor:
+                dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisito))
+
     projeto.dados = json.dumps(dados)
     projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
+    return redirect(reverse('requisitos'))
+
 def editar_requisito(request, id, id_requisito):
     requisito  = request.POST.get(f'requisito{id_requisito}', '')
+    classe  = request.POST.get(f'classe_requisito{id_requisito}', '')
+    
+
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
-    dados['requisitos_funcionais'].pop(id_requisito)
-    dados['requisitos_funcionais'].insert(id_requisito,requisito)
+
+    if id_requisito< len(dados['requisitos_funcionais']):
+        dados['requisitos_funcionais'].pop(id_requisito)
+    else:
+        for chave,valor in dados['requisitos_nao_funcionais'].items():
+            if requisito in valor:
+                dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisito))
+    if classe=='Functional':
+        dados['requisitos_funcionais'].insert(id_requisito,requisito) 
+    else:
+        try:
+            dados['requisitos_nao_funcionais'][classe].append(requisito)
+        except:
+            dados['requisitos_nao_funcionais'][classe]=[requisito]
     projeto.dados = json.dumps(dados)
     projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
-
+    return redirect(reverse('requisitos'))
 
 @login_required(login_url="/login/")
 def modeling(request):
