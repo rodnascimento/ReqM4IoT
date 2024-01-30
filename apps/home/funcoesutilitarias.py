@@ -330,7 +330,7 @@ class Contextualizacao:
             chave,valor=palavra.split(',')
             self.dicionario_palavras_smart[chave]=int(valor)
     def sensores(self):
-        arquivo = open("sensores.txt",'r')
+        arquivo = open("/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/sensores.txt",'r')
         arq = ''
         for i in arquivo:
             arq+=i
@@ -355,11 +355,10 @@ class Contextualizacao:
         palavras = list(tfidfvectorizer.get_feature_names_out())
         df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), columns=palavras)
         palavras_smart=list(self.dicionario_palavras_smart.keys())
-
+        df = df_tfidfvect
         if self.peso["centroids"]==False:
             n = 2
             kmeans = KMeans(n_clusters=n, random_state=0,n_init=10)
-            df = df_tfidfvect
             kmeans.fit(df)
             labels = kmeans.labels_
             self.peso['centroids'] = kmeans.cluster_centers_.tolist()
@@ -370,6 +369,8 @@ class Contextualizacao:
             modelo_carregado.cluster_centers_ = np.array(self.peso['centroids'])
             modelo_carregado.labels_ = np.array(self.peso['labels'])
             labels = modelo_carregado.labels_
+            #labels = modelo_carregado.predict(df)
+        
         classe_0 = [not bool(x) for x in labels]
         classe_1 = [bool(x) for x in labels]
         classe_0 = df[classe_0]
@@ -522,7 +523,7 @@ def limpeza(requisitos):
 
 def trigram_pos(requisitos):
     from pickle import load
-    entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     tagger = load(entrada)
     entrada.close()
     
@@ -532,7 +533,8 @@ def trigram_pos(requisitos):
 
 def caminho(escolha, requisitos):
     from pickle import load
-    entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    #entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     tagger = load(entrada)
     entrada.close()
     aux=[]
@@ -541,7 +543,7 @@ def caminho(escolha, requisitos):
     requisitos=aux
 
     if escolha == 1:
-        arquivo = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/passivevoice.txt','r')
+        arquivo = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/passivevoice.txt','r')
         texto = ''
         for linhas in arquivo:
             texto+=linhas
@@ -564,7 +566,7 @@ def caminho(escolha, requisitos):
 
             Data.append((requisitos[indice], aux))
     elif escolha ==2:
-        arquivo = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/dicionario_base.txt','r')
+        arquivo = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/dicionario_base.txt','r')
         texto = ''
         for linhas in arquivo:
             texto+=linhas
@@ -592,7 +594,7 @@ def caminho(escolha, requisitos):
     
     elif escolha ==3:
         headings = ("Nº Requisito", "Contextualizados", "Completos")
-        contextualizados,pesos = Contextualizacao(requisitos,"/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/m3-ontology.txt").analise_contextualizacao()
+        contextualizados,pesos = Contextualizacao(requisitos,"/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/m3-ontology.txt").analise_contextualizacao()
         Contex = contextualizados['Contextualizados']
         Sensores = contextualizados['SensoresIncompletos']
         Atuadores = contextualizados["AtuadoresIncompletos"]
@@ -606,7 +608,7 @@ def caminho(escolha, requisitos):
                 Data.append((requisitos[i], aux))
             else:
                 continue
-            return Data,pesos
+            return contextualizados, Data,pesos
 
     return [Data, headings, requisitos]
 

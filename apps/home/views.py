@@ -155,18 +155,18 @@ def requirements(request):
 
 
     requisitos_iot = json.loads(escolha.dados)['requisitos_iot']
-    print(requisitos_iot)
-    Contex = requisitos_iot['requisitos_iot']
+    Contex = requisitos_iot['Contextualizados']
     Sensores = requisitos_iot['SensoresIncompletos']
     Atuadores = requisitos_iot["AtuadoresIncompletos"]
     Data = []
-    for i in range(len(requisitos_iot)):
+    print(len(requisitos_funcionais))
+    for i in range(len(requisitos_funcionais)):
         aux = []
         aux.append(i in Contex)
         aux.append(i in Sensores)
         aux.append(i in Atuadores)
         if True in aux:
-            Data.append((requisitos[i], aux))
+            Data.append((requisitos_funcionais[i][0], aux))
         else:
             continue
     
@@ -406,19 +406,29 @@ def editar_requisito(request, id, id_requisito):
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
 
-    if id_requisito< len(dados['requisitos_funcionais']):
+    if requisito in dados['requisitos_funcionais']:
         dados['requisitos_funcionais'].pop(id_requisito)
+        if classe=='Functional':
+            dados['requisitos_funcionais'].insert(id_requisito,requisito)
+        else:
+            try:
+                dados['requisitos_nao_funcionais'][classe].append(requisito)
+            except:
+                if classe != '':
+                    dados['requisitos_nao_funcionais'][classe]=[requisito] 
     else:
         for chave,valor in dados['requisitos_nao_funcionais'].items():
             if requisito in valor:
                 dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisito))
-    if classe=='Functional':
-        dados['requisitos_funcionais'].insert(id_requisito,requisito) 
-    else:
-        try:
-            dados['requisitos_nao_funcionais'][classe].append(requisito)
-        except:
-            dados['requisitos_nao_funcionais'][classe]=[requisito]
+                break
+        if classe=='Functional':
+            dados['requisitos_funcionais'].append(requisito) 
+        else:
+            try:
+                dados['requisitos_nao_funcionais'][classe].append(requisito)
+            except:
+                if classe != '':
+                    dados['requisitos_nao_funcionais'][classe]=[requisito]
     projeto.dados = json.dumps(dados)
     projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
@@ -435,14 +445,39 @@ def editar_requisito(request, id, id_requisito):
     except EmptyPage:
         requisitos_paginados = paginator.page(paginator.num_pages)
 
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+    requisitos_iot = json.loads(projeto.dados)['requisitos_iot']
+    Contex = requisitos_iot['Contextualizados']
+    Sensores = requisitos_iot['SensoresIncompletos']
+    Atuadores = requisitos_iot["AtuadoresIncompletos"]
+    Data = []
+    for i in range(len(requisitos_funcionais)):
+        aux = []
+        aux.append(i in Contex)
+        aux.append(i in Sensores)
+        aux.append(i in Atuadores)
+        if True in aux:
+            Data.append((requisitos_funcionais[i][0], aux))
+        else:
+            continue
+    
+    page = request.GET.get('page2', 1)
+    paginator = Paginator(Data, 10)  # 10 requisitos por página
+    try:
+        requisitos_iot_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_iot_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_iot_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
 
 @login_required(login_url="/login/")
 def classificador_iot(request,id):
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
-    requisitos_iot,pesos = caminho(3, obter_requisitos(projeto))
-    dados['requisitos_iot']=requisitos_iot
+    print(obter_requisitos(projeto))
+    save,requisitos_iot,pesos = caminho(3, obter_requisitos(projeto))
+    dados['requisitos_iot']=save
     dados['classificador']=pesos
     projeto.dados = json.dumps(dados)
     projeto.save()
@@ -451,26 +486,25 @@ def classificador_iot(request,id):
     requisitos_funcionais = obter_requisitos(projeto)
     lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
-    try:
-        requisitos_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_paginados = paginator.page(paginator.num_pages)
-
     page = request.GET.get('page2', 1)
-    paginator = Paginator(dados['requisitos_iot'], 10)  # 10 requisitos por página
-    try:
-        requisitos_iot_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_iot_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_iot_paginados = paginator.page(paginator.num_pages)
+    requisitos_iot = json.loads(projeto.dados)['requisitos_iot']
+    Contex = requisitos_iot['Contextualizados']
+    Sensores = requisitos_iot['SensoresIncompletos']
+    Atuadores = requisitos_iot["AtuadoresIncompletos"]
+    Data = []
+    for i in range(len(requisitos_funcionais)):
+        aux = []
+        aux.append(i in Contex)
+        aux.append(i in Sensores)
+        aux.append(i in Atuadores)
+        if True in aux:
+            Data.append((requisitos_funcionais[i][0], aux))
+        else:
+            continue
 
-    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
 
+    #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
+    return redirect('requisitos')
 @login_required(login_url="/login/")
 def modeling(request):
     return render(request, 'home/modeling.html',)
