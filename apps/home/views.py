@@ -124,7 +124,6 @@ def requirements(request):
     try:
         escolha = Projetos.objects.get(id=escolha)
         nome=escolha.nome_projeto
-        
         requisitos_funcionais = obter_requisitos(escolha)
         lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
     except Exception as e:
@@ -134,7 +133,11 @@ def requirements(request):
         'casos_de_uso': [],
         'maquina_de_estados': [{'nome': 'Texto', 'imagem': 'texto'}],
         'sequencia': [{'nome': 'Texto', 'imagem': 'texto'}],
-        'requisitos_iot': {}
+        'requisitos_iot': {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]},
+        'classificador': {
+            'centroids': False,
+            'labels': False
+            }
         }
         escolha=Projetos(dados=json.dumps(dados),nome_projeto="",id_criador=0)
         nome=escolha.nome_projeto
@@ -150,7 +153,33 @@ def requirements(request):
     except EmptyPage:
         requisitos_paginados = paginator.page(paginator.num_pages)
 
-    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+
+    requisitos_iot = json.loads(escolha.dados)['requisitos_iot']
+    print(requisitos_iot)
+    Contex = requisitos_iot['requisitos_iot']
+    Sensores = requisitos_iot['SensoresIncompletos']
+    Atuadores = requisitos_iot["AtuadoresIncompletos"]
+    Data = []
+    for i in range(len(requisitos_iot)):
+        aux = []
+        aux.append(i in Contex)
+        aux.append(i in Sensores)
+        aux.append(i in Atuadores)
+        if True in aux:
+            Data.append((requisitos[i], aux))
+        else:
+            continue
+    
+    page = request.GET.get('page2', 1)
+    paginator = Paginator(Data, 10)  # 10 requisitos por página
+    try:
+        requisitos_iot_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_iot_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_iot_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
 
 @login_required(login_url="/login/")
 def processamento_requisito(request):
@@ -322,8 +351,21 @@ def salvar_requisito(request, id):
         dados['requisitos_funcionais'].append(requisito)
     projeto.dados = json.dumps(dados)
     projeto.save()
-    return redirect(reverse('requisitos'))
-    #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":obter_requisitos(projeto)})
+    
+    requisitos_funcionais = obter_requisitos(projeto)
+    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
+    try:
+        requisitos_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+
 
 @login_required(login_url="/login/")
 def excluir_requisito(request, id, id_requisito):
@@ -341,7 +383,20 @@ def excluir_requisito(request, id, id_requisito):
     projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    return redirect(reverse('requisitos'))
+    
+    requisitos_funcionais = obter_requisitos(projeto)
+    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
+    try:
+        requisitos_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
 
 def editar_requisito(request, id, id_requisito):
     requisito  = request.POST.get(f'requisito{id_requisito}', '')
@@ -368,7 +423,53 @@ def editar_requisito(request, id, id_requisito):
     projeto.save()
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    return redirect(reverse('requisitos'))
+    requisitos_funcionais = obter_requisitos(projeto)
+    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
+    try:
+        requisitos_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+
+@login_required(login_url="/login/")
+def classificador_iot(request,id):
+    projeto = Projetos.objects.get(id=id)
+    dados = json.loads(projeto.dados)
+    requisitos_iot,pesos = caminho(3, obter_requisitos(projeto))
+    dados['requisitos_iot']=requisitos_iot
+    dados['classificador']=pesos
+    projeto.dados = json.dumps(dados)
+    projeto.save()
+    projetos_usuario = list(filtrar_projetos_usuario(request.user))
+    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
+    requisitos_funcionais = obter_requisitos(projeto)
+    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
+    try:
+        requisitos_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_paginados = paginator.page(paginator.num_pages)
+
+    page = request.GET.get('page2', 1)
+    paginator = Paginator(dados['requisitos_iot'], 10)  # 10 requisitos por página
+    try:
+        requisitos_iot_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        requisitos_iot_paginados = paginator.page(1)
+    except EmptyPage:
+        requisitos_iot_paginados = paginator.page(paginator.num_pages)
+
+    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
 
 @login_required(login_url="/login/")
 def modeling(request):

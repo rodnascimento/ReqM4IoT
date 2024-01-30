@@ -1,0 +1,415 @@
+sensor,1
+actuator,1
+mob ho exec succ rate,3
+air pollution,2
+microwatt,3
+metre per second,2
+mileage,2
+time related state driver1,4
+pascal,2
+air pollutant sensor,3
+watt,2
+pedometer,3
+tonne,3
+qr code,3
+board thermometer,4
+environment,2
+heart beat sensor,3
+minute time,3
+speed sensor,3
+speed average,3
+neighbours,3
+time related state driver2,4
+curtain,3
+centimetre,3
+blood glucose,2
+acc initial e rab estab succ rate,3
+touch sensor,3
+humidity,2
+place,2
+optical dust sensor,4
+fall detector,3
+motion,2
+wind speed,2
+wind speed sensor,4
+milligram,3
+sound sensor,3
+magnetic field,2
+timestamp,2
+soil humidity sensor,4
+mob mobility succ rate,3
+revolutions per minute,2
+so2 sensor,5
+rotational speed engine,3
+experiment,2
+microgram per cubic metre,3
+step,2
+mileage total,3
+clock,3
+lumen,2
+human presence detector,4
+milligram per litre,3
+temperature,2
+boiler,3
+water conductivity sensor,4
+reactive power,3
+motion state vehicle,3
+farad,2
+radian,2
+atmospheric pressure sensor,3
+power,2
+sound pressure level ambient,3
+vehicle count sensor,4
+no2 sensor,5
+air thermometer,4
+working state driver1,4
+cloud cover sensor,3
+wind direction sensor,3
+ph,2
+tesla,2
+traffic intensity,2
+ohm,2
+sun position elevation sensor,3
+chemical agent water concentration,3
+gaseous pollutant sensor,4
+working state driver2,4
+no sensor,5
+seismometer,3
+dimensionless,2
+proximity,2
+acceleration,2
+wind direction,2
+pressure sensor,3
+fuel consumption total,3
+pulse oxymeter,3
+inch,3
+shake sensor,3
+speed,2
+heart beat,2
+mob ho prep succ rate,3
+distance,2
+chemical agent atmospheric concentration c o,4
+atmospheric pressure,3
+presence,2
+int ul packet loss,3
+fuel consumption instantaneous,3
+volt,2
+presence state driver card2,4
+microvolt,3
+vehicle overspeed state,2
+household appliance temperature,3
+sound,2
+degree angle,3
+emotion,2
+millimetre per hour,2
+presence state driver card,3
+methane sensor,5
+millivolt,3
+electric potential,2
+degree fahrenheit,3
+wind chill sensor,3
+magnetic flux density,2
+count,2
+window,3
+hour,3
+humidity sensor,3
+tourism,2
+bar,2
+visibility,2
+cloud cover,2
+capacitance,2
+telephone,3
+lavatory,3
+lamp,3
+presence state emergency vehicle,3
+blind,3
+board temperature,3
+coffee machine,3
+construction work,3
+illuminance,2
+fuel level,3
+animals,3
+rotational speed,2
+image sensor,3
+sun position elevation,2
+millivolt per metre,2
+skin conductance sensor,3
+source,1
+mmhg,2
+delta dew point,3
+kelvin,2
+recognized activity,2
+air humidity sensor,4
+chemical agent atmospheric concentration air particles,4
+o3 sensor,5
+acc initial e rab setup succ rate,3
+direction azimuth,2
+salinity,2
+coordinates,2
+decibel a,3
+potassium,2
+transportation,2
+chemical agent atmospheric concentration n o2,4
+kilo watt hour,2
+centibar,3
+precipitation,2
+location q k,2
+kilogram,3
+traffic,3
+speed instantaneous,3
+radiation particles per minute,2
+lux,2
+invalid,2
+abs,3
+irrigation,3
+alarm system,3
+temperature waste container,3
+dew point sensor,3
+snow chains,3
+presence detector,3
+milliampere,3
+metre per second square,2
+microampere,3
+metre,2
+gram per litre,2
+litre,2
+fill level gas tank2,4
+degree,2
+visibility sensor,3
+gram per cubic metre,2
+room temperature,4
+watt per square metre,2
+tv,3
+fill level gas tank1,4
+manual,2
+soil thermometer,4
+chemical agent atmospheric concentration,3
+fill level waste container,3
+cholesterol sensor,3
+fridge,3
+percent,2
+pound,3
+ecg,3
+measurement type,1
+door,3
+source,1
+crowd,3
+energy,2
+electric field sensor,3
+cupboard,3
+body temperature,3
+salt meter,3
+soil temperature,3
+skin conductance,2
+solar radiation,2
+dish washer,3
+miles,3
+kilogram per cubic metre,3
+kilometre,3
+acc rrc conn setup succ rate,3
+road surface thermometer,4
+kilometre per hour,3
+oxygen sensor,5
+degree celsius,3
+throttle sensor,3
+diastolic blood pressure,4
+fan,3
+working state driver,3
+fill level gas tank,3
+chemical agent water concentration o2,4
+co2,2
+proximity sensor,3
+acceleration instantaneous,3
+okta,2
+wind chill,2
+electric field2100 m hz,3
+leaf wetness sensor,3
+ppm,2
+energy d o i,2
+building temperature,3
+glucometer,3
+sun position direction sensor,3
+blood pressure sensor,3
+gyrometer sensor,3
+fuel consumption,2
+delta dew point sensor,3
+mileage distance to service,3
+temperature engine,3
+chemical agent concentration,2
+presence state parking,3
+ventilation,3
+drawer,3
+coulomb,2
+cholesterol,2
+air conditioner,3
+chemical agent water concentration n o3 ion,4
+presence state people,3
+conductivity sensor,3
+relative humidity,2
+communication,2
+water o2 ion sensor,2
+sink,3
+water p h sensor,4
+chemical agent water concentration n h4 ion,4
+volt ampere reactive,2
+electric charge,2
+counter,3
+door status,2
+systolic blood pressure,4
+direction heading,2
+calibration sensing,2
+electrical resistance,2
+weight,2
+ea qi,2
+gas detector,3
+second time,2
+gyroscope sensor,3
+sound source,2
+blood pressure,3
+computer,3
+luminous flux,2
+alcohol level,2
+conductivity,2
+sodium,2
+door state sensor,3
+public transit,3
+dust sensor,3
+milliwatt,3
+air temperature,3
+agriculture,2
+electric current,2
+co sensor,5
+weather precipitation,3
+leaf wetness,2
+millisecond,3
+heating,3
+barcode,3
+voltage,2
+count empty docking points,3
+soil moisture tension,2
+fog lamp,3
+millibar,3
+int ul throughput kbps,3
+electrical sensor,3
+electric field,2
+count available bicycles,3
+working state,2
+esp,3
+co2 sensor,5
+beat per minute,2
+res average lic connected users,3
+voltage sensor,3
+water thermometer,4
+alcohol level sensor,3
+microwave,3
+ionising radiation,2
+rainfall,2
+light sensor,3
+presence state driver card1,4
+luminous intensity,2
+sp o2,2
+water level,2
+ph sensor,3
+soil humidity,2
+air quality,2
+microgram,3
+vehicle presence detector,4
+sun position direction,2
+motion state,2
+second angle,2
+domain of interest,1
+gauss,2
+gram,2
+freezer,3
+electric field900 mhz,3
+body thermometer,4
+direction,1
+shower,3
+distance sensor,3
+ampere,2
+health,2
+millilitre,3
+domain of interest,1
+gps sensor,3
+weather,2
+year,3
+water no3 ion sensor,2
+calcium,2
+energy meter,3
+radiation particle detector,3
+sound pressure level,2
+road occupancy,2
+count available taxis,3
+food temperature,3
+chemical agent atmospheric concentration o3,4
+fill level,2
+wout,2
+water nh4 ion sensor,2
+direction,1
+sirens,3
+decibel,2
+kilobits per second,2
+nh3 sensor,5
+automatic sensing,2
+scale,2
+int dl throughput kbps,3
+index,2
+rf id,3
+accelerometer,3
+item,2
+weather luminosity,3
+time related state,2
+others,2
+mmol per litre,2
+city,2
+pressure,2
+active power,3
+precipitation sensor,3
+time related state driver,3
+chemical agent atmospheric concentration dust,2
+frequency,2
+wi fi interface energy meter,4
+lo ra interface energy meter,4
+smoke detector,3
+thermometer,3
+int dl latency,3
+solar radiation sensor,3
+microwatt per square centimetre,3
+day,3
+measurement type,1
+water temperature,3
+dew point temperature,3
+dew point,2
+sound source,1
+building automation,2
+electric field1800 mhz,3
+litre per100 kilometres,2
+washing machine,3
+hydrophone,3
+speed median,3
+milligram per cubic metre,3
+ret e rab drop,3
+frequency sensor,3
+electric field2400 m hz,3
+road temperature,3
+millimetre,3
+nfc,3
+ultrasonic sensor,3
+radian per second,2
+siemens per metre,2
+candela,2
+milligram per square metre,2
+minute angle,2
+magnetometer,3
+vehicles per minute,2
+hertz,2
+h2s sensor,5
+seat belt tension sensor,3
+battery level,2
+angular speed,2
+mass,2
+weight sensor,3
+acc s1 sig estab succ rate,3
+odometer,3
+sensing device,1
+chemical agent atmospheric concentration quantity kind,1

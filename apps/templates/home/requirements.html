@@ -336,6 +336,89 @@
                     </div>
                   </div>
               </div>
+              <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Requisitos IoT</h4>
+
+                    <form method="post" action="{% url 'classificador_iot' escolha.id %}">
+                        {% csrf_token %}
+                        
+                        <!-- Seus outros campos do formulário aqui -->
+                    
+                        <button type="submit" class="btn btn-primary">Reclassificar os requisitos de IoT</button>
+                    </form>
+                    
+                  </div>
+                <div div class="card-body">
+                <div class="table-responsive">
+                    <table class="table tablesorter ">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th class="text-center">
+                                Requisito
+                              </th>
+                              <th class="text-center">
+                                Sensor
+                              </th>
+                              <th class="text-center">
+                                Atuador
+                              </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for requisito in requisitos_iot %}
+                            <tr>
+                                <td class="text-center">
+                                    {{ requisito|first }}
+                                </td>
+                                {% for req in requisito|slice:"1:2" %}
+                                    {% if req|slice:"1:2"|first %}
+                                        <td class="text-center">
+                                            <i class='fas fa-times'></i>
+                                        </td>
+                                    {% else %}
+                                        <td class="text-center">
+                                            <i class='fas fa-check'></i>
+                                        </td>
+                                    {% endif %}
+
+                                    {% if req|slice:"2:3"|first %}
+                                        <td class="text-center">
+                                            <i class='fas fa-times'></i>
+                                        </td>
+                                    {% else %}
+                                        <td class="text-center">
+                                            <i class='fas fa-check'></i>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if requisitos_iot.has_previous %}
+                                    <a href="?page2=1">&laquo; first</a>
+                                    <a href="?page2={{ requisitos_iot.previous_page_number }}">previous</a>
+                                {% endif %}
+                        
+                                <span class="current">
+                                    Página {{ requisitos_iot.number }} de {{ requisitos_iot.paginator.num_pages }}.
+                                </span>
+                        
+                                {% if requisitos_iot.has_next %}
+                                    <a href="?page2={{ requisitos_iot.next_page_number }}">next</a>
+                                    <a href="?page2={{ requisitos_iot.paginator.num_pages }}">last &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+              
+                </div>
             </div>
     </div>
 

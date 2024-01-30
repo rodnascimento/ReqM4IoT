@@ -15,7 +15,11 @@ def criar_projeto(dados_projeto, id_usuario):
         'casos_de_uso': [],
         'maquina_de_estados': [{'nome': Texto, 'imagem': 'texto'}],
         'sequencia': [{'nome': Texto, 'imagem': 'texto'}],
-        'requisitos_iot': {}
+        'requisitos_iot': {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]},
+        'modelo_dict': {
+            'centroids': "modelo_carregado.cluster_centers_.tolist()",
+            'labels': "modelo_carregado.labels_.tolist()"
+        }
     }
     dados_projeto = {'nome': 'Nome', 'dados' = None}
     '''
@@ -25,7 +29,11 @@ def criar_projeto(dados_projeto, id_usuario):
         'casos_de_uso': [],
         'maquina_de_estados': [{'nome': 'Texto', 'imagem': 'texto'}],
         'sequencia': [{'nome': 'Texto', 'imagem': 'texto'}],
-        'requisitos_iot': {}
+        'requisitos_iot': {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]},
+        'classificador': {
+            'centroids': False,
+            'labels': False
+            }
     }
     try:
         projeto = Projetos(dados=json.dumps(dados), nome_projeto=dados_projeto['nome'],descricao=dados_projeto['descricao'], id_criador=id_usuario)
@@ -302,6 +310,193 @@ class ambiguidade_sintatica:
                 retorno['Attachment'][indice]= self.attachment_ambiguity(requisito)[1]
         return retorno
 
+class Contextualizacao:
+    def __init__(self, requisitos,nome_arquivo_ontologia,pesos={'centroids': False,'labels': False}):
+        self.requisitos=requisitos
+        self.arquivo=nome_arquivo_ontologia
+        self.dicionario_palavras_smart={}
+        self.contextualizados = {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]}
+        self.sensores=[]
+        self.peso=pesos
+    def tratamento_ontologia(self):
+        arquivo = open(self.arquivo,'r')
+        arq = ''
+        for i in arquivo:
+            arq+=i
+        arquivo.close()
+        palavras_smart=arq.split('\n')
+
+        for palavra in palavras_smart:
+            chave,valor=palavra.split(',')
+            self.dicionario_palavras_smart[chave]=int(valor)
+    def sensores(self):
+        arquivo = open("sensores.txt",'r')
+        arq = ''
+        for i in arquivo:
+            arq+=i
+        arquivo.close()
+        self.sensores=arq.split('\n')
+    def OR(self,array1,array2):
+        aux=[]
+        for i in range(len(array1)):
+            aux.append(array1[i] or array2[i])
+        return aux 
+
+    def contextualizacao(self):
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        import pandas as pd
+        import numpy as np
+        from sklearn.cluster import KMeans
+        requisitos=limpeza(self.requisitos)[1]
+        self.tratamento_ontologia()
+        tfidfvectorizer = TfidfVectorizer(analyzer='word', stop_words='english')
+
+        tfidf_wm = tfidfvectorizer.fit_transform(requisitos)
+        palavras = list(tfidfvectorizer.get_feature_names_out())
+        df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), columns=palavras)
+        palavras_smart=list(self.dicionario_palavras_smart.keys())
+
+        if self.peso["centroids"]==False:
+            n = 2
+            kmeans = KMeans(n_clusters=n, random_state=0,n_init=10)
+            df = df_tfidfvect
+            kmeans.fit(df)
+            labels = kmeans.labels_
+            self.peso['centroids'] = kmeans.cluster_centers_.tolist()
+            self.peso['labels'] = kmeans.labels_.tolist()
+            
+        else:
+            modelo_carregado = KMeans(n_clusters=len(self.peso['centroids']))
+            modelo_carregado.cluster_centers_ = np.array(self.peso['centroids'])
+            modelo_carregado.labels_ = np.array(self.peso['labels'])
+            labels = modelo_carregado.labels_
+        classe_0 = [not bool(x) for x in labels]
+        classe_1 = [bool(x) for x in labels]
+        classe_0 = df[classe_0]
+        classe_1 = df[classe_1]
+
+
+        
+        
+        indices_0 = list(classe_0.mean() == 0)
+        indices_0 = list(classe_0.mean()[indices_0].index)
+        indices_1 = list(classe_1.mean() == 0)
+        indices_1 = list(classe_1.mean()[indices_1].index)
+
+        classe_1 = classe_1.drop(columns=indices_1)
+        classe_0 = classe_0.drop(columns=indices_0)
+
+        palavras_0 = list(classe_0.columns)
+        palavras_1 = list(classe_1.columns)
+        
+        palavras_check_0 = []
+        for i in range(len(palavras_0)):
+            for palavra in palavras_smart:
+                if palavras_0[i] in palavra:
+                    if palavras_0[i] not in palavras_check_0:
+                        palavras_check_0.append(palavras_0[i])
+        palavras_check_1 = []
+        for i in range(len(palavras_1)):
+            for palavra in palavras_smart:
+                if palavras_1[i] in palavra:
+                    if palavras_1[i] not in palavras_check_1:
+                        palavras_check_1.append(palavras_1[i])
+
+        media_0 = classe_0.mean()[palavras_check_0]
+        media_1 = classe_1.mean()[palavras_check_1]
+    
+        score_0 = media_0.sum()
+        score_1 = media_1.sum()
+
+        
+        if score_0 > score_1:
+            classe=0
+            qtde_palavras=len(palavras_0)
+        else:
+            classe=1
+            qtde_palavras = len(palavras_1)
+
+        if classe==1:
+            pass
+        else:
+            aux=[]
+            '''print('labels sem mexer: ',list(labels))'''
+            for i in list(labels):
+                if i==0:
+                    i=1
+                elif i==1:
+                    i=0
+                aux.append(i)
+            labels=aux
+        
+        vetor=[0 for i in range(len(palavras))]
+        for chave,valor in self.dicionario_palavras_smart.items():
+            if len(chave.split(' '))==1:
+                if chave in palavras:
+                    indice=palavras.index(chave)
+                    vetor[indice]=valor
+            else:
+                aux=0
+                for mini_chave in chave.split(' '):
+                    if mini_chave in palavras:
+                        aux+=1
+                if aux==len(chave.split(' ')):
+                    for mini_chave in chave.split(' '):
+                        indice=palavras.index(mini_chave)
+                        vetor[indice]=valor
+        df_pesos=pd.DataFrame(vetor,index=palavras)
+        vetor_pesos=np.array(vetor)
+
+        array_score=[]
+        for indice in range(len(self.requisitos)):
+            linha=df_tfidfvect.iloc[indice]
+            array_linha=np.array(linha)
+            array_score.append(np.dot(vetor_pesos,array_linha))
+        media_score=sum(array_score)/len(array_score)
+
+        resultado=[]
+        for i in array_score:
+            if i>=media_score:
+                resultado.append(1)
+            else:
+                resultado.append(0)
+        
+        array_or=self.OR(labels,resultado)
+        self.contextualizados["Contextualizados"]=[indice for indice,valor in enumerate(array_or) if valor==1]
+    
+    def completude(self):
+        tokens, requisitos=limpeza(self.requisitos)
+        pos = trigram_pos(requisitos)
+        
+        
+        for indice in self.contextualizados["Contextualizados"]:
+            palavras=tokens[indice]
+            
+            for i,palavra in enumerate(palavras):
+                # 1 - Sensor sem definição do sensor
+                if(palavra=="sensor" or palavra=="sensors"):
+                    if not ((palavras[i - 1] in self.sensores)):
+                        if indice not in self.contextualizados["SensoresIncompletos"]:
+                            self.contextualizados["SensoresIncompletos"].append(indice)
+
+                        
+                        
+                # 2 - Atuadores sem definição
+                if (palavra == "actuator" or palavra == "actuators"):
+                    try:
+                        if not ((pos[indice][i+1][1]=='RB') or (pos[indice][i+1][1][0]=='V')):
+                            if indice not in self.contextualizados["AtuadoresIncompletos"]:
+                                self.contextualizados["AtuadoresIncompletos"].append(indice)
+                    except:
+                        if indice not in self.contextualizados["AtuadoresIncompletos"]:
+                            self.contextualizados["AtuadoresIncompletos"].append(indice)
+    
+    def analise_contextualizacao(self):
+        self.contextualizacao()
+        self.completude()
+        return self.contextualizados,self.peso
+
+
 def limpeza(requisitos):
     tokens = []
     import copy
@@ -340,7 +535,11 @@ def caminho(escolha, requisitos):
     entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     tagger = load(entrada)
     entrada.close()
-    
+    aux=[]
+    for requisito in requisitos.values():
+        aux.append(requisito[0])
+    requisitos=aux
+
     if escolha == 1:
         arquivo = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/passivevoice.txt','r')
         texto = ''
@@ -390,6 +589,25 @@ def caminho(escolha, requisitos):
             aux.append(indice in Coordination)
             aux.append(indice in Attachment)
             Data.append((requisitos[indice], aux))
+    
+    elif escolha ==3:
+        headings = ("Nº Requisito", "Contextualizados", "Completos")
+        contextualizados,pesos = Contextualizacao(requisitos,"/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/m3-ontology.txt").analise_contextualizacao()
+        Contex = contextualizados['Contextualizados']
+        Sensores = contextualizados['SensoresIncompletos']
+        Atuadores = contextualizados["AtuadoresIncompletos"]
+        Data = []
+        for i in range(len(requisitos)):
+            aux = []
+            aux.append(i in Contex)
+            aux.append(i in Sensores)
+            aux.append(i in Atuadores)
+            if True in aux:
+                Data.append((requisitos[i], aux))
+            else:
+                continue
+            return Data,pesos
+
     return [Data, headings, requisitos]
 
 def obter_requisitos(projeto):
