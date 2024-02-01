@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
+
+from django.contrib.auth.forms import UserChangeForm
 class Projetos(models.Model):
     id = models.AutoField(primary_key=True)
     dados = models.TextField()
@@ -23,4 +25,6 @@ class ProjetosUsuarios(models.Model):
     projeto = models.ForeignKey(Projetos, on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.id}'s ProjetosUsuários"
+
+
 

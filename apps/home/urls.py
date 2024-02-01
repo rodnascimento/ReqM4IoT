@@ -25,6 +25,8 @@ urlpatterns = [
     path('excluir_requisito/<int:id>/<int:id_requisito>',views.excluir_requisito, name='excluir_requisito'),
     path('editar_requisito/<int:id>/<int:id_requisito>',views.editar_requisito, name='editar_requisito'),
     path('processamento_requisito_editar',views.processamento_requisito_editar, name='processamento_requisito_editar'),
+    path('usuario',views.usuario, name='usuario'),
+    path('editar_usuario',views.editar_usuario, name='editar_usuario'),
 
     path('modelagem',views.modeling, name='modelagem')
 

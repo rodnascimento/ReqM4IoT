@@ -17,7 +17,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 import json
-
+from django.contrib.auth import authenticate, login
+from .forms import EditUserForm
 
 
 @login_required(login_url="/login/")
@@ -505,6 +506,33 @@ def classificador_iot(request,id):
 
     #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
     return redirect('requisitos')
+
+@login_required(login_url="/login/")
+def usuario(request):
+    return render(request, 'home/user.html',{'usuario': request.user})
+
+@login_required(login_url="/login/")
+def editar_usuario(request):
+    username = request.POST.get('username')
+    email = request.POST.get('email')
+    senha_atual = request.POST.get('senha_atual')
+    senha_nova = request.POST.get('password1')
+    confirmar_senha = request.POST.get('password2')
+    data = request.POST.copy()  # Copie os dados para evitar alterar o original
+    data.pop('senha_atual', None) 
+    if(authenticate(username=username, password=senha_atual)):
+        if senha_nova==confirmar_senha:
+            request.user.set_password(senha_nova)
+            request.user.save()
+        else:
+            print("senhas não são iguais")
+    else:
+        print("Falso")
+    
+
+    return redirect('usuario')
+
+
 @login_required(login_url="/login/")
 def modeling(request):
     return render(request, 'home/modeling.html',)
