@@ -156,6 +156,7 @@ def requirements(request):
 
 
     requisitos_iot = json.loads(escolha.dados)['requisitos_iot']
+    print(requisitos_iot)
     Contex = requisitos_iot['Contextualizados']
     Sensores = requisitos_iot['SensoresIncompletos']
     Atuadores = requisitos_iot["AtuadoresIncompletos"]
@@ -533,7 +534,22 @@ def editar_usuario(request):
     return redirect('usuario')
 
 
+
 @login_required(login_url="/login/")
 def modeling(request):
+    return render(request, 'home/modeling.html',)
+
+@login_required(login_url="/login/")
+def salvar_modelagem(request):
+    if request.method == 'POST':
+        try:
+            xml_data = request.body.decode('utf-8')
+            print(xml_data)
+            response_data = {'status': 'success', 'message': 'Diagrama salvo com sucesso.'}
+            print(response_data)
+
+        except Exception as e:
+            response_data = {'status': 'error', 'message': f'Erro ao salvar o diagrama: {str(e)}'}
+
     return render(request, 'home/modeling.html',)
 

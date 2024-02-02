@@ -330,7 +330,7 @@ class Contextualizacao:
             chave,valor=palavra.split(',')
             self.dicionario_palavras_smart[chave]=int(valor)
     def sensores(self):
-        arquivo = open("/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/sensores.txt",'r')
+        arquivo = open("/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/sensores.txt",'r')
         arq = ''
         for i in arquivo:
             arq+=i
@@ -523,7 +523,7 @@ def limpeza(requisitos):
 
 def trigram_pos(requisitos):
     from pickle import load
-    entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     tagger = load(entrada)
     entrada.close()
     
@@ -533,8 +533,8 @@ def trigram_pos(requisitos):
 
 def caminho(escolha, requisitos):
     from pickle import load
-    #entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
-    entrada = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    #entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
+    entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     tagger = load(entrada)
     entrada.close()
     aux=[]
@@ -543,7 +543,7 @@ def caminho(escolha, requisitos):
     requisitos=aux
 
     if escolha == 1:
-        arquivo = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/passivevoice.txt','r')
+        arquivo = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/passivevoice.txt','r')
         texto = ''
         for linhas in arquivo:
             texto+=linhas
@@ -566,7 +566,7 @@ def caminho(escolha, requisitos):
 
             Data.append((requisitos[indice], aux))
     elif escolha ==2:
-        arquivo = open('/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/dicionario_base.txt','r')
+        arquivo = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/dicionario_base.txt','r')
         texto = ''
         for linhas in arquivo:
             texto+=linhas
@@ -594,7 +594,7 @@ def caminho(escolha, requisitos):
     
     elif escolha ==3:
         headings = ("Nº Requisito", "Contextualizados", "Completos")
-        contextualizados,pesos = Contextualizacao(requisitos,"/home/brunocarvalho/ReqM4IoT/ReqM4IoT/apps/static/assets/arquivos_requisitos/m3-ontology.txt").analise_contextualizacao()
+        contextualizados,pesos = Contextualizacao(requisitos,"/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/m3-ontology.txt").analise_contextualizacao()
         Contex = contextualizados['Contextualizados']
         Sensores = contextualizados['SensoresIncompletos']
         Atuadores = contextualizados["AtuadoresIncompletos"]

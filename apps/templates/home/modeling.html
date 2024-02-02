@@ -76,7 +76,7 @@
                         <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
                     </div>
                     <div id="graphContainer" style="width: calc(100% - 220px); height: 500px; border: solid;"></div>
-                    <button id="saveButton">Salvar Diagrama</button>
+                    <button id="saveButton" onclick="handleSaveButtonClick()">Salvar Diagrama</button>
                     <button id="loadButton">Carregar Diagrama</button>
                     <button id="downloadXMLButton">Download em XML</button>
                     <button id="downloadPDFButton">Download em PDF</button>
@@ -219,6 +219,32 @@
         } finally {
             graph.getModel().endUpdate();
         }
+    }
+
+    function handleSaveButtonClick(){
+            // Salva o estado atual do grafo
+            const encoder = new mxCodec();
+            const node = encoder.encode(graph.getModel());
+            const xml = new XMLSerializer().serializeToString(node);
+
+        // Envia o XML para a view Django usando uma solicitação AJAX
+        fetch('/salvar_modelagem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/xml',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: xml
+            })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao enviar o XML para a view Django. Status: ' + response.status);
+            }
+            console.log('XML enviado com sucesso para a view Django.');
+            })
+            .catch(error => {
+            console.error('Erro ao enviar o XML para a view Django:', error);
+            });
     }
 
     //cria Class
@@ -1477,6 +1503,8 @@
 
     //download diagrama
     document.getElementById('downloadXMLButton').addEventListener('click', function() {
+        console.log("cheguei")
+        /*
       // Salva o estado atual do grafo
       const encoder = new mxCodec();
       const node = encoder.encode(graph.getModel());
@@ -1493,8 +1521,13 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(url);*/
+
+        // Salva o estado atual do grafo
+        
+
     });
+
 
     document.getElementById('downloadPDFButton').addEventListener('click', function() {
      
@@ -1573,26 +1606,33 @@ var dlLink = document.createElement('a');
     });
 
     
-
     // Enviar dados do gráfico para o backend (Django) via AJAX para salvar
-    document.getElementById('saveButton').addEventListener('click', function() {
-        const data = mxUtils.getXml(graph.getModel());
-        fetch('/save-graph-data/', {
+        document.getElementById('saveButton').addEventListener('click', function() {
+            console.log("cheguei")
+            // Salva o estado atual do grafo
+            const encoder = new mxCodec();
+            const node = encoder.encode(graph.getModel());
+            const xml = new XMLSerializer().serializeToString(node);
+
+        // Envia o XML para a view Django usando uma solicitação AJAX
+        fetch('/salvar_modelagem', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/xml',
                 'X-CSRFToken': getCookie('csrftoken')
             },
-            body: JSON.stringify({ data: data })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-        })
-        .catch(error => {
-            console.error('Erro ao salvar o diagrama:', error);
+            body: xml
+            })
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao enviar o XML para a view Django. Status: ' + response.status);
+            }
+            console.log('XML enviado com sucesso para a view Django.');
+            })
+            .catch(error => {
+            console.error('Erro ao enviar o XML para a view Django:', error);
+            });
         });
-    });
 
     // Carregar dados do gráfico do backend (Django) via AJAX
     document.getElementById('loadButton').addEventListener('click', function() {

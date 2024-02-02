@@ -28,7 +28,8 @@ urlpatterns = [
     path('usuario',views.usuario, name='usuario'),
     path('editar_usuario',views.editar_usuario, name='editar_usuario'),
 
-    path('modelagem',views.modeling, name='modelagem')
+    path('modelagem',views.modeling, name='modelagem'),
+    path('salvar_modelagem',views.salvar_modelagem, name='salvar_modelagem')
 
     # Matches any html file
     #re_path(r'^.*\.*', views.pages, name='pages'),
