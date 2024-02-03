@@ -28,6 +28,10 @@
     #graphContainer {
         margin-left: 220px; /* Adapte a margem para acomodar a barra lateral */
     }
+    .modalStyle {
+        display: none;
+        position: fixed;
+        }
     
 </style>
 {% endblock stylesheets %}
@@ -102,9 +106,18 @@
                                     <div class="form-group">
                                         <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
                                         <input type="text" class="form-control" id="projeto-nome">
+                                        <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
+                                        <select>
+                                            <option value="uml">UML</option>
+                                            <option value="sysml">SysML</option>
+                                            <option value="sysiotml">SysIoTML</option>                                            
+                                        </select>
                                         <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
                                         <select>
-                                            <option value=""></option>
+                                            <option value="usecase">Diagrama de Caso de Uso</option>
+                                            <option value="seq">Diagrama de Sequencia</option>
+                                            <option value="block">Diagrama de Bloco</option>
+                                            <option value="machine">Diagrama de Máquina de Estado</option>
                                         </select>
                                     </div>
                                 </div>
@@ -172,6 +185,39 @@
               </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade modalStyle" id="modalStyle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 400px;float: right;">
+        <div class="modal-content">
+            <div class="modal-header">
+            
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="labelInput">Label:</label>
+                    <input type="text" id="labelInput" placeholder="Enter label" onchange="setLabel()">
+
+                    <label for="fontInput">Fonte:</label>
+                    <input type="text" id="fontInput" placeholder="Enter font" onchange="setFont()">
+
+                    <label for="fontSizeInput">Font Size:</label>
+                    <input type="number" id="fontSizeInput"  onchange="setFontSize()">
+
+                    <label for="labelColorInput">Label Color:</label>
+                    <input type="color" id="labelColorInput" placeholder="Enter label color" onchange="setLabelColor()">
+
+                    <label for="projeto-nome" class="col-form-label">Cor:</label>
+                    <input type="color" id="head" name="head" value="#e66465" onchange="updateFillColor()">
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -187,6 +233,7 @@
 
     const parent = graph.getDefaultParent();
     
+    let elementoType;
 
     let source, target;
     let creatingEdge = false;
@@ -337,16 +384,10 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl + ';align=center;verticalAlign=bottom;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, height);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
+   
 
         
         graph.refresh();
@@ -402,16 +443,9 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=center;verticalAlign=bottom;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, height);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
 
         
         graph.refresh();
@@ -467,16 +501,10 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=center;verticalAlign=bottom;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, height);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
+        
 
         
         graph.refresh();
@@ -532,16 +560,10 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=center;verticalAlign=bottom;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, height);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
+        
 
         
         graph.refresh();
@@ -597,16 +619,10 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=center;verticalAlign=bottom;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, height);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
+       
 
         
         graph.refresh();
@@ -662,16 +678,9 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=left;verticalAlign=top;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;align=left;'; 
 
         
         graph.refresh();
@@ -901,16 +910,10 @@
         y,
         width,
         height,
-        'shape=image;image=' + actorIconUrl
+        'shape=image;image=' + actorIconUrl+ ';align=center;verticalAlign=top;'
         );
 
-        vertex.geometry.offset = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.anchorPoint = new mxPoint(0, 0);
-        vertex.geometry.relative = false;
-        vertex.geometry.labelPosition = mxConstants.ALIGN_LEFT + mxConstants.ALIGN_BOTTOM;
-
-        vertex.style += ';verticalAlign=top;'; 
+  
 
         
         graph.refresh();
@@ -1254,47 +1257,6 @@
         };
     });
 
-    // funcao delete
-    document.addEventListener('keydown', function (e) {
-    if (e.key === 'Delete') {
-        const cells = graph.getSelectionCells();
-
-        if (cells && cells.length > 0) {
-        graph.removeCells(cells);
-        }
-    }
-    });
-
-    // funcao Ctrl+C e Ctrl+V
-    document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey) {
-        if (e.key === 'c' || e.key === 'C') {
-        copyCells();
-        }
-
-        if (e.key === 'v' || e.key === 'V') {
-        pasteCells();
-        }
-    }
-    });
-
-    // Função para copiar células
-    function copyCells() {
-        const cells = graph.getSelectionCells();
-
-        mxClipboard.copy(graph, cells);
-    }
-
-    // Função para colar células
-    function pasteCells() {
-        const cells = mxClipboard.paste(graph);
-
-        if (cells) {
-            graph.addCells(cells);
-        }
-    }
-
-
     //cria Barra de ativação
     document.getElementById('addActivationBarButton').addEventListener('click', function() {
         const vertex = graph.insertVertex(graph.getDefaultParent(), null, '', 100, 100, 20, 160, 'color:white;fillColor=#FFFFFF;strokeColor=#000000;');
@@ -1501,6 +1463,135 @@
    
     });
 
+    // funcao delete
+    document.addEventListener('keydown', function (e) {
+    if (e.key === 'Delete') {
+        const cells = graph.getSelectionCells();
+
+        if (cells && cells.length > 0) {
+        graph.removeCells(cells);
+        }
+    }
+    });
+
+    // funcao Ctrl+C e Ctrl+V
+    document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey) {
+        if (e.key === 'c' || e.key === 'C') {
+        copyCells();
+        }
+
+        if (e.key === 'v' || e.key === 'V') {
+        pasteCells();
+        }
+    }
+    });
+
+    // Função para copiar células
+    function copyCells() {
+        const cells = graph.getSelectionCells();
+
+        mxClipboard.copy(graph, cells);
+    }
+
+    // Função para colar células
+    function pasteCells() {
+        const cells = mxClipboard.paste(graph);
+
+        if (cells) {
+            graph.addCells(cells);
+        }
+    }
+
+    // selecionar mais de um elemento e cria retangulo de seleção
+    var selectedCells = [];
+
+    // funcao pra arrastar varios
+    function enableMultiSelection() {
+    var container = graph.container;
+
+    var isMouseDown = false;
+    var startX, startY;
+    var rubberband = document.createElement('div');
+    rubberband.style.border = '1px dashed gray';
+    rubberband.style.position = 'absolute';
+    rubberband.style.backgroundColor = 'rgba(173, 216, 230, 0.3)';
+    rubberband.style.display = 'none';
+
+    container.appendChild(rubberband);
+
+    mxEvent.addListener(container, 'mousedown', function(evt) {
+        if (evt.which === 1) {
+        isMouseDown = true;
+        startX = mxEvent.getClientX(evt) - container.getBoundingClientRect().left;
+        startY = mxEvent.getClientY(evt) - container.getBoundingClientRect().top;
+
+        rubberband.style.display = 'none';
+        graph.clearSelection();
+        selectedCells = [];
+        }
+    });
+
+    mxEvent.addListener(container, 'mousemove', function(evt) {
+        if (isMouseDown) {
+        var currentX = mxEvent.getClientX(evt) - container.getBoundingClientRect().left;
+        var currentY = mxEvent.getClientY(evt) - container.getBoundingClientRect().top;
+
+        var x = Math.min(startX, currentX);
+        var y = Math.min(startY, currentY);
+        var width = Math.abs(currentX - startX);
+        var height = Math.abs(currentY - startY);
+
+        rubberband.style.left = x + 'px';
+        rubberband.style.top = y + 'px';
+        rubberband.style.width = width + 'px';
+        rubberband.style.height = height + 'px';
+        rubberband.style.display = 'block';
+
+        selectElementsInRect(graph, x, y, width, height);
+        }
+    });
+
+    mxEvent.addListener(container, 'mouseup', function(evt) {
+        if (isMouseDown) {
+        isMouseDown = false;
+
+        graph.setSelectionCells(selectedCells);
+
+        mxEvent.addListener(container, 'click', function(evt) {
+            mxEvent.removeListener(container, 'click');
+        });
+
+        rubberband.style.display = 'none';
+        }
+    });
+    }
+
+    // isso ajuda selecionar elementos dentro do retângulo
+    function selectElementsInRect(graph, x, y, width, height) {
+        var cells = graph.getChildVertices(graph.getDefaultParent());
+
+        for (var i = 0; i < cells.length; i++) {
+            var state = graph.view.getState(cells[i]);
+
+            if (state != null) {
+            var bounds = state;
+
+            if (
+                bounds.x >= x &&
+                bounds.x + bounds.width <= x + width &&
+                bounds.y >= y &&
+                bounds.y + bounds.height <= y + height
+            ) {
+                selectedCells.push(cells[i]);
+            }
+            }
+        }
+    }
+
+    // aqui eu chamo
+    enableMultiSelection();
+
     //download diagrama
     document.getElementById('downloadXMLButton').addEventListener('click', function() {
         console.log("cheguei")
@@ -1587,6 +1678,179 @@ var dlLink = document.createElement('a');
       const codec = new mxCodec(doc);
       codec.decode(doc.documentElement, graph.getModel());
     }
+
+    //pega o click
+    graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+        var cell = evt.getProperty('cell');
+        if (cell) { 
+            const style = graph.getCellStyle(cell);
+            console.log(style[mxConstants.STYLE_SHAPE] )
+            if (style[mxConstants.STYLE_SHAPE] === mxConstants.SHAPE_IMAGE) {
+                elementoType = "eimagem"
+            } else if (cell.isEdge()) {
+                elementoType = "elinha"
+            } else {
+                elementoType = "naoeimagem"
+            }
+        }
+        if (cell) {
+        openModal(cell.value);
+        }
+    });
+
+    // Função para abrir o modal
+    function openModal(content) {
+        $("#modalStyle").modal({
+            show: true
+        });
+    }
+    
+    //altera a cor 
+    function updateFillColor() {
+        const colorInput = document.getElementById('head');
+        const colorValue = colorInput.value;
+
+        setFillColor(colorValue);
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0]; 
+        
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                
+                if(elementoType == "eimagem"){
+                    graph.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, colorValue, [cell]);
+                } if(elementoType == "elinha"){
+                    graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, colorValue, [cell]);
+                }else{
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, colorValue, [cell]);
+                }
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+    
+    //ajuda a alterar cor
+    function setFillColor(color) {
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0]; 
+        
+
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                if(elementoType == "eimagem"){
+                    graph.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, color, [cell]);
+                } if(elementoType == "elinha"){
+                    graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, color, [cell]);
+                }else{
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+                }
+                
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+
+    // Função para definir o texto do rótulo do elemento selecionado
+    function setLabel() {
+        const label = document.getElementById('labelInput').value;
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0]; 
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                graph.labelChanged(cell, label);
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+
+    // Função para definir a fonte do rótulo do elemento selecionado
+    function setFont() {
+        const font = document.getElementById('fontInput').value;
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0]; 
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                graph.setCellStyles(mxConstants.STYLE_FONTFAMILY, font, [cell]);
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+
+    // Função para definir o tamanho do texto do rótulo do elemento selecionado
+    function setFontSize() {
+        const fontSize = document.getElementById('fontSizeInput').value;
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0]; 
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                graph.setCellStyles(mxConstants.STYLE_FONTSIZE, fontSize, [cell]);
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+
+    function setLabelColor() {
+        const labelColor = document.getElementById('labelColorInput').value;
+        const selectionModel = graph.getSelectionModel();
+        const cell = selectionModel.cells[0];
+        if (cell) {
+            graph.getModel().beginUpdate();
+            try {
+                graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, labelColor, [cell]);
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    }
+
+
+    //Isso faz o modal se mover
+    var modal = document.getElementById('modalStyle');
+    var isMovendo = false;
+    var posicaoInicial = { x: 0, y: 0 };
+
+
+    function iniciarMovimento(event) {
+    isMovendo = true;
+    posicaoInicial.x = event.clientX;
+    posicaoInicial.y = event.clientY;
+    }
+
+
+    function moverModal(event) {
+    if (isMovendo) {
+        var offsetX = event.clientX - posicaoInicial.x;
+        var offsetY = event.clientY - posicaoInicial.y;
+
+        var novaPosicaoX = modal.offsetLeft + offsetX;
+        var novaPosicaoY = modal.offsetTop + offsetY;
+
+        modal.style.left = novaPosicaoX + 'px';
+        modal.style.top = novaPosicaoY + 'px';
+
+        posicaoInicial.x = event.clientX;
+        posicaoInicial.y = event.clientY;
+    }
+    }
+
+    function finalizarMovimento() {
+    isMovendo = false;
+    }
+
+    modal.addEventListener('mousedown', iniciarMovimento);
+    document.addEventListener('mousemove', moverModal);
+    document.addEventListener('mouseup', finalizarMovimento);
+
 
     document.getElementById('associationButton').addEventListener('click', function() {
         creatingEdge = true;
