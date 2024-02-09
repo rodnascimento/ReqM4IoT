@@ -61,6 +61,18 @@
                         <p>RTL Support</p>
                     </a>
                 </li>-->
+                <li class="{% if 'about' in segment %} active {% endif %}">
+                    <a href="{% url 'about'%}">
+                        <i class="tim-icons icon-alert-circle-exc"></i>
+                        <p>Sobre</p>
+                    </a>
+                </li>
+                <li class="{% if 'help' in segment %} active {% endif %}">
+                    <a href="{% url 'help'%}">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>Ajuda</p>
+                    </a>
+                </li>
                 <li>
                     <a href="{% url 'login' %}">
                         <i class="tim-icons icon-button-power"></i>

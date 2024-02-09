@@ -553,3 +553,8 @@ def salvar_modelagem(request):
 
     return render(request, 'home/modeling.html',)
 
+def about(request):
+    return render(request, 'home/about.html',)
+
+def help(request):
+    return render(request, 'home/help.html',)

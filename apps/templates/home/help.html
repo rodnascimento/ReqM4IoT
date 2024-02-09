@@ -1,0 +1,143 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Ajuda {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+.hidden-info {
+  display: none;
+  background-color: #f9f9f9;
+}
+.expandable {
+    cursor: pointer;   
+}
+
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="content">
+        <div class="container">
+            <div class="row pt-5">
+                <div class="col-md-12 ">
+                    <div class="card">
+                        <div class="card-header text-center py-4">
+                            <h1 class="title">Ajuda</h1>
+                                <h4 class="title">Dúvidas comuns.</h4>
+                        </div>
+                        <div class="card-body px-5 py-3">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card ">
+                                          <div class="card-header">
+                                          </div>
+                                          <div class="card-body">
+                                            <div class="table-responsive">
+                                              <table class="table tablesorter " id="myTable">
+                                                <thead class=" text-primary">
+                                                  <tr>
+                                                    <th>
+                                                      Dúvidas
+                                                    </th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="expandable" >
+                                                    <td>
+                                                        Dakota Rice
+                                                    </td>
+                                                </tr>
+                                                <tr class="hidden-info">
+                                                    <td colspan="3">
+                                                      <div>
+                                                        Informações adicionais:
+                                                        <ul>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                        </ul>
+                                                      </div>
+                                                    </td>
+                                                  </tr>
+                                                <tr class="expandable" >
+                                                    <td>
+                                                        Dakota Rice
+                                                    </td>
+                                                </tr>
+                                                <tr class="hidden-info">
+                                                    <td colspan="3">
+                                                      <div>
+                                                        Informações adicionais:
+                                                        <ul>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                        </ul>
+                                                      </div>
+                                                    </td>
+                                                  </tr>
+                                                <tr class="expandable" >
+                                                    <td>
+                                                        Dakota Rice
+                                                    </td>
+                                                </tr>
+                                                <tr class="hidden-info">
+                                                    <td colspan="3">
+                                                      <div>
+                                                        Informações adicionais:
+                                                        <ul>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                          <li>bla</li>
+                                                        </ul>
+                                                      </div>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            
+                            
+                            <br /><br />
+
+                            <p>
+                                Se você não encontrou o que procurava, entre em contato conosco {algum email?}.                           
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#myTable tbody tr.expandable').click(function() {
+      $(this).next('.hidden-info').toggle();
+    });
+  });
+</script>
+
+
+{% endblock javascripts %}

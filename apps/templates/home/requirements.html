@@ -60,7 +60,7 @@
                     <label>Deseja trabalhar em qual projeto agora? </label>
                         <form id="projeto_form" method="post" action="{% url 'requisitos' %}">
                             {% csrf_token %}
-                            <select name="escolha" id="projeto_select" class="styled-select">
+                            <select name="escolha" id="projeto_select" class="styled-select form-control-sm">
                                 {% for projeto in nomes_projeto %}
                                 <option value="{{projeto.id}}" {% if nome == projeto.nome  %}selected{% endif %}>{{projeto.nome}}</option>                                
                                 {% endfor %}
@@ -94,20 +94,28 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <div class="form-group row">
-                                        <label for="requisito" class="col-form-label" for = "requisito">Insira o novo requisito:</label>
-                                        <div class = "col-sm-8">
-                                            <input type="text" name="requisito" maxlength="100" required id="requisito">
+                                            <label for="requisito" class="col-form-label" for = "requisito">Insira o novo requisito:</label>
+                                            <div class = "col-sm-8">
+                                                <input type="text" name="requisito" maxlength="100" required id="requisito" class="form-control">
+                                            </div>
                                         </div>
-                                    </div>
                                         <div class="form-group row">
-                                            <label for="requisito" class="col-form-label col-sm-4">Insira um arquivo de requisitos</label>
-                                            <div class="col-sm-8">
-                                                <label id="customButtonLabel" for="fileInput">
-                                                    <div id="customButton"></div>
-                                                  </label>
-                                                          <input type="file" id="fileInput" name = "fileInput" onchange="displayFileName()" accept=".txt, .docx" />                                               
-                                                  <div id="fileNameDisplay"></div>
-                                                </div>
+                                            <!--<label for="requisito" class="col-form-label ">Insira um arquivo de requisitos:</label>-->
+                                             <!--/*RODRIGO*/-->
+                                             <label id="fileNameDisplay" for="fileInput" class="custom-file-input" style="display: inline-block;
+                                             padding: 10px 15px;
+                                             margin-left: 15px;
+                                             font-size: 16px;
+                                             font-weight: bold;
+                                             color: #fff;
+                                             background-color: #6da5cb;
+                                             border: 1px solid #2980b9;
+                                             border-radius: 5px;
+                                             cursor: pointer;
+                                             opacity: 1;
+                                             width: 700px;">Insira um arquivo de requisitos:</label>
+                                             <input type="file" id="fileInput" onchange="displayFileName(this)" style="display: none;">
+                                             <!--/*RODRIGO*/-->
                                         </div>
                                         
                                         <button type="button" class="btn btn-primary" id="analise">Avaliar o Requisito</button>
@@ -122,16 +130,13 @@
                                 </div>
                             </div>
                             <script>
-                                function displayFileName() {
-                                    // Obtém o elemento de input de arquivo
-                                    var fileInput = document.getElementById('fileInput');
-
-                                    // Obtém o elemento de exibição do nome do arquivo
-                                    var fileNameDisplay = document.getElementById('fileNameDisplay');
-
-                                    // Atualiza o conteúdo da div com o nome do arquivo selecionado
-                                    fileNameDisplay.textContent = fileInput.files[0].name;
-                                    }
+                                function displayFileName(input) {
+                                    const fileNameDisplay = document.getElementById("fileNameDisplay");
+                                    const field = document.getElementById("fileInput")
+                                
+                                    const fileName = input.files[0].name;
+                                    fileNameDisplay.innerText = `Insira um arquivo de requisitos: ${fileName}`;
+                                }
 
                                 document.addEventListener('DOMContentLoaded', function () {
                                     // Mantenha o modal aberto após a submissão
@@ -249,11 +254,11 @@
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="requisito{{requisito.chave}}" class="col-form-label" for = "requisito{{requisito.chave}}">Insira o novo requisito:</label>
-                                                <div class = "col-sm-8">
-                                                    <input type="text" name="requisito{{requisito.chave}}" maxlength="100" required id="requisito{{requisito.chave}}" value="{{requisito.valor|first}}">
-                                                </div>
-
-                                                <select name="classe_requisito{{requisito.chave}}" id="classe_requisito{{requisito.chave}}" class="styled-select">
+                                                
+                                                    <input type="text" name="requisito{{requisito.chave}}" maxlength="100" required id="requisito{{requisito.chave}}" value="{{requisito.valor|first}}" class="form-control">
+                                                
+                                                <label >Classe:</label>
+                                                <select name="classe_requisito{{requisito.chave}}" id="classe_requisito{{requisito.chave}}" class="styled-select form-control">
                                                     <option value="Functional" {% if "Functional" in requisito.valor %}selected{% endif %}>Funcional</option>  
                                                     <option value="Usability" {% if "Usability" in requisito.valor %}selected{% endif %}>Usability</option>                                                    
                                                     <option value="Fault tolerance" {% if "Fault tolerance" in requisito.valor %}selected{% endif %}>Fault tolerance</option>                                                    

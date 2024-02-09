@@ -31,6 +31,38 @@
     .modalStyle {
         display: none;
         position: fixed;
+    }
+
+
+
+    input[type="file"] {
+            display: none;
+        }
+
+        /* Style the custom button */
+        .custom-file-input {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #495a65;
+            border: 1px solid #2980b9;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 1;
+            width: 250px;
+        }
+
+        /* Style for the selected file name display */
+        .file-name {
+            margin-top: 10px;
+            opacity: 1;
+        }
+
+        /* Add hover effect for better user interaction */
+        .custom-file-input:hover {
+            background-color: #89acd3;
         }
     
 </style>
@@ -77,15 +109,30 @@
                         <div class="toolButton" id="addLine10Button"><img src="../../static/assets/img/linha10.png" height="70px"alt="linha" title="linha"></div>
                         <div class="toolButton" id="addLine11Button"><img src="../../static/assets/img/linha11.png" height="70px"alt="linha" title="linha"></div>
                         <div class="toolButton" id="addLine12Button"><img src="../../static/assets/img/linha12.png" height="70px"alt="linha" title="linha"></div>
+                        <div class="" id=""><label id="" for="imageInput" class=""  style="width:70px;
+                            padding: 10px;
+                            margin: 10px;
+                            cursor: pointer;
+                            border: 1px solid #ccc;
+                            background-color: #fff;
+                            text-align: center;"><img id="" src="../../static/assets/img/import.png" height="90px"></label>
+                            <input type="file" id="imageInput"  accept="image/*"></div>
+                        
+
                         <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
                     </div>
                     <div id="graphContainer" style="width: calc(100% - 220px); height: 500px; border: solid;"></div>
-                    <button id="saveButton" onclick="handleSaveButtonClick()">Salvar Diagrama</button>
-                    <button id="loadButton">Carregar Diagrama</button>
-                    <button id="downloadXMLButton">Download em XML</button>
-                    <button id="downloadPDFButton">Download em PDF</button>
-                    <button id="downloadPNGButton">Download em Imagem</button>
-                    <input type="file" id="fileInput" accept=".xml">
+                    
+                    <label id="downloadXMLButton" class="custom-file-input" style="color: #f0f0f0;">Download em XML</label>
+                    <label id="downloadPDFButton" class="custom-file-input" style="color: #f0f0f0;">Download em PDF</label>
+                    <label id="downloadPNGButton" class="custom-file-input" style="color: #f0f0f0;">Download em Imagem</label>
+                    
+
+
+                    <label id="fileNameDisplay" for="fileInput" class="custom-file-input" style="color: #f0f0f0;width: 400px;">Esolha um arquivo .xml:</label>
+                    <input type="file" id="fileInput"  accept=".xml">
+
+
                     <div class="table-responsive">
                        <!-- Botão para acionar modal -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
@@ -107,13 +154,13 @@
                                         <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
                                         <input type="text" class="form-control" id="projeto-nome">
                                         <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
-                                        <select>
+                                        <select class="form-control">
                                             <option value="uml">UML</option>
                                             <option value="sysml">SysML</option>
                                             <option value="sysiotml">SysIoTML</option>                                            
                                         </select>
                                         <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
-                                        <select>
+                                        <select class="form-control">
                                             <option value="usecase">Diagrama de Caso de Uso</option>
                                             <option value="seq">Diagrama de Sequencia</option>
                                             <option value="block">Diagrama de Bloco</option>
@@ -187,7 +234,7 @@
 
     <!-- Modal -->
     <div class="modal fade modalStyle" id="modalStyle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="width: 400px;float: right;">
+        <div class="modal-dialog" role="document" style="width: 400px; height: 400px;float: right;overflow-y: auto;">
         <div class="modal-content">
             <div class="modal-header">
             
@@ -198,20 +245,31 @@
         
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="labelInput">Label:</label>
-                    <input type="text" id="labelInput" placeholder="Enter label" onchange="setLabel()">
-
+                    <label for="labelInput">Texto:</label>
+                    <input type="text" id="labelInput" onchange="setLabel()" class="form-control" >
+                </br>
                     <label for="fontInput">Fonte:</label>
-                    <input type="text" id="fontInput" placeholder="Enter font" onchange="setFont()">
-
-                    <label for="fontSizeInput">Font Size:</label>
-                    <input type="number" id="fontSizeInput"  onchange="setFontSize()">
-
-                    <label for="labelColorInput">Label Color:</label>
-                    <input type="color" id="labelColorInput" placeholder="Enter label color" onchange="setLabelColor()">
-
+                    <select class="form-control" id="fontInput" onchange="setFont()">
+                        <option value="Arial">-----</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Palatino">Palatino</option>
+                        <option value="Garamond">Garamond</option>
+                    </select>
+                </br>
+                    <label for="fontSizeInput">Tamanho da Fonte:</label>
+                    <input type="number" id="fontSizeInput"  onchange="setFontSize()" class="form-control" >
+                    
+                </br>
+                    <label for="labelColorInput">Cor do Texto:</label>
+                    <input type="color" id="labelColorInput" placeholder="Enter label color" onchange="setLabelColor()" class="form-control" >
+                </br>
                     <label for="projeto-nome" class="col-form-label">Cor:</label>
-                    <input type="color" id="head" name="head" value="#e66465" onchange="updateFillColor()">
+                    <input type="color" id="head" name="head" value="#e66465" onchange="updateFillColor()" class="form-control" >
                 </div>
             </div>
         </div>
@@ -225,6 +283,17 @@
 <script src="https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/mxClient.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.0/rgbcolor.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.0/canvg.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+
+  <script>
+    // Display selected file name
+    function displayFileName(input) {
+        
+        
+    }
+</script>
 
 <script>
     // Inicialização do mxGraph
@@ -1595,7 +1664,7 @@
     //download diagrama
     document.getElementById('downloadXMLButton').addEventListener('click', function() {
         console.log("cheguei")
-        /*
+        
       // Salva o estado atual do grafo
       const encoder = new mxCodec();
       const node = encoder.encode(graph.getModel());
@@ -1612,7 +1681,7 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);*/
+      window.URL.revokeObjectURL(url);
 
         // Salva o estado atual do grafo
         
@@ -1621,46 +1690,37 @@
 
 
     document.getElementById('downloadPDFButton').addEventListener('click', function() {
-     
+        
     });
     
 
     //download png
+    //Isso ocorre porque os navegadores têm uma política de segurança chamada Política da Mesma Origem (Same-Origin Policy), que restringe como um documento ou script carregado de uma origem pode interagir com um recurso de outra origem. Isso é uma precaução de segurança importante para evitar ataques de Cross-Site Scripting (XSS).
+    //Quando você tenta carregar uma imagem localmente (por exemplo, a partir do sistema de arquivos do seu computador), o navegador considera isso como uma origem diferente. Portanto, por padrão, ele bloqueia a tentativa de carregar a imagem devido à Política da Mesma Origem.
     document.getElementById('downloadPNGButton').addEventListener('click', function() {
-        img = new Image(),
-        serializer = new XMLSerializer(),
-        svgStr = serializer.serializeToString(document.getElementById('graphContainer'));
-        
-    img.src = 'data:image/svg+xml;base64,'+window.btoa(svgStr);
-    console.log(img.src)
-    
-    // You could also use the actual string without base64 encoding it:
-    //img.src = "data:image/svg+xml;utf8," + svgStr;
+        var node = document.getElementById('graphContainer');
 
-    var canvas = document.createElement("canvas");
-
-    var w=800;
-    var h=400;
-
-    canvas.width = w;
-    canvas.height = h;
-    canvas.getContext("2d").drawImage(img,0,0,w,h);
-    
-    var imgURL = img.src;
-
-var dlLink = document.createElement('a');
-    dlLink.download = "image";
-    dlLink.href = imgURL;
-    dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-
-    document.body.appendChild(dlLink);
-    dlLink.click();
-    document.body.removeChild(dlLink);
+        domtoimage.toPng(node)
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'diagrama.png';
+                link.href = dataUrl;
+                console.log(dataUrl)
+                link.click();
+            })
+            .catch(function (error) {
+                console.error('Erro ao criar a imagem!', error);
+            });
     });
 
     // Adiciona um ouvinte de eventos para carregar XML
     document.getElementById('fileInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
+      const fileNameDisplay = document.getElementById("fileNameDisplay");
+        const field = document.getElementById("fileInput")
+    
+        const fileName = file.name;
+        fileNameDisplay.innerText = `Esolha um arquivo .xml: ${fileName}`;
 
       if (file) {
         const reader = new FileReader();
@@ -1693,6 +1753,8 @@ var dlLink = document.createElement('a');
                 elementoType = "naoeimagem"
             }
         }
+        document.getElementById('labelInput').value=cell.value;
+        
         if (cell) {
         openModal(cell.value);
         }
@@ -1700,11 +1762,110 @@ var dlLink = document.createElement('a');
 
     // Função para abrir o modal
     function openModal(content) {
+        
         $("#modalStyle").modal({
             show: true
         });
     }
     
+    //carregar imagem
+    document.getElementById('imageInput').addEventListener('change', handleFileSelect, false);
+
+    function handleFileSelect(event) {
+    var file = event.target.files[0];
+
+    if (!file) return;
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        console.log(e)
+        var imageUrl = e.target.result;
+        var img = new Image();
+        img.onload = function() {
+        var width = 100;
+        var height = 100;
+        
+        var x = graph.container.offsetWidth / 2 - width / 2;
+        var y = graph.container.offsetHeight / 2 - height / 2;
+        
+        importImage(imageUrl, x, y, width, height);
+        };
+        img.src = imageUrl;
+    };
+    reader.readAsDataURL(file);
+    
+    }
+
+    // Função para importar imagem, conforme definida no exemplo anterior
+    function importImage(url, x, y, width, height) {
+        const vertex = graph.insertVertex(
+        parent,
+        null,
+        '',
+        x,
+        y,
+        width,
+        height,
+        'shape=image;image=' + url
+        );
+        graph.refresh();
+
+        vertex.setVertex(true); 
+        //vertex.setConnectable(false); 
+
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === vertex) {
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+    
+    
+        var parent = graph.getDefaultParent();
+        graph.getModel().beginUpdate();
+        try {
+            vertex = graph.addCell(vertex, parent);
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    }
+
+
+    //funcao crtl+z
+    var undoManager = new mxUndoManager();
+
+    graph.getModel().addListener(mxEvent.UNDO, function(sender, evt){
+    undoManager.undoableEditHappened(evt.getProperty('edit'));
+    });
+
+    function undo() {
+    if (undoManager.canUndo()) {
+        undoManager.undo();
+    } else {
+        alert('Não há mais operações para desfazer.');
+    }
+    }
+
+    document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 'z') {
+        undo();
+    }
+    });
+
+
     //altera a cor 
     function updateFillColor() {
         const colorInput = document.getElementById('head');
@@ -1767,6 +1928,7 @@ var dlLink = document.createElement('a');
                 graph.getModel().endUpdate();
             }
         }
+        graph.refresh();
     }
 
     // Função para definir a fonte do rótulo do elemento selecionado
@@ -1782,6 +1944,7 @@ var dlLink = document.createElement('a');
                 graph.getModel().endUpdate();
             }
         }
+        graph.refresh();
     }
 
     // Função para definir o tamanho do texto do rótulo do elemento selecionado
@@ -1797,6 +1960,7 @@ var dlLink = document.createElement('a');
                 graph.getModel().endUpdate();
             }
         }
+        graph.refresh();
     }
 
     function setLabelColor() {
@@ -1811,6 +1975,7 @@ var dlLink = document.createElement('a');
                 graph.getModel().endUpdate();
             }
         }
+        graph.refresh();
     }
 
 
