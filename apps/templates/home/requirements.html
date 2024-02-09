@@ -46,6 +46,10 @@
     #projeto_form {
         margin-top: 20px;
     }
+    .search-container {
+        margin-bottom: 10px;
+        text-align: left;
+        }
   </style>
 
 {% block content %}
@@ -67,7 +71,7 @@
                             
                             </select>
                         </form>
-
+                        
                         <script>
                             // Adiciona um evento onchange ao select para acionar o envio do formulário
                             document.getElementById('projeto_select').addEventListener('change', function() {
@@ -79,6 +83,17 @@
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
                             Novos requisitos no projeto {{nome}}
                         </button>
+                        <div>
+                            <label>Mostre <select id="objects-per-page-1">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select> por página</label>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" id="search-input-1" placeholder="Pesquisar...">
+                        </div>
                         <form name = "formModal" id = "formModal" class = "form-horizontal" enctype="multipart/form-data" method="post" action = "{% url 'salvar_requisito' escolha.id%}">
                             {% csrf_token %}
                         <!-- Modal -->
@@ -176,7 +191,7 @@
                     </form>
                         
                     <div class="table-responsive">
-                        <table class="table tablesorter " id="">
+                        <table class="table tablesorter " id="myTable-1">
                         <thead class=" text-primary">
                             <tr>
                                 <th class="text-center">
@@ -317,22 +332,9 @@
                         </tbody>
                         </table>
                     </div>
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if requisitos.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ requisitos.previous_page_number }}">previous</a>
-                            {% endif %}
-                    
-                            <span class="current">
-                                Página {{ requisitos.number }} de {{ requisitos.paginator.num_pages }}.
-                            </span>
-                    
-                            {% if requisitos.has_next %}
-                                <a href="?page={{ requisitos.next_page_number }}">next</a>
-                                <a href="?page={{ requisitos.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
+                    <div id="pagination-buttons">
+                        <button id="prev-page-1">Anterior</button>
+                        <button id="next-page-1">Próxima</button>
                     </div>
                   </div>
               </div>
@@ -349,9 +351,19 @@
                     </form>
                     
                   </div>
+                  
                 <div div class="card-body">
+                    <label>Mostre <select id="objects-per-page">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select> por página</label>
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Pesquisar...">
+                    </div>
                 <div class="table-responsive">
-                    <table class="table tablesorter ">
+                    <table class="table tablesorter " id="myTable">
                     <thead class=" text-primary">
                         <tr>
                             <th class="text-center">
@@ -398,23 +410,10 @@
                         </tbody>
                         </table>
                     </div>
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if requisitos_iot.has_previous %}
-                                    <a href="?page2=1">&laquo; first</a>
-                                    <a href="?page2={{ requisitos_iot.previous_page_number }}">previous</a>
-                                {% endif %}
-                        
-                                <span class="current">
-                                    Página {{ requisitos_iot.number }} de {{ requisitos_iot.paginator.num_pages }}.
-                                </span>
-                        
-                                {% if requisitos_iot.has_next %}
-                                    <a href="?page2={{ requisitos_iot.next_page_number }}">next</a>
-                                    <a href="?page2={{ requisitos_iot.paginator.num_pages }}">last &raquo;</a>
-                                {% endif %}
-                            </span>
-                        </div>
+                    <div id="pagination-buttons">
+                        <button id="prev-page">Anterior</button>
+                        <button id="next-page">Próxima</button>
+                    </div>
                     </div>
                 </div>
               
@@ -433,6 +432,242 @@
         demo.initDashboardPageCharts();
 
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('myTable');
+    const tbody = table.querySelector('tbody');
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Função de pesquisa
+    document.getElementById('search-input').addEventListener('input', function () {
+        const searchText = this.value.toLowerCase();
+        rows.forEach(row => {
+            const cells = Array.from(row.querySelectorAll('td'));
+            const found = cells.some(cell => cell.textContent.toLowerCase().includes(searchText));
+            row.style.display = found ? '' : 'none';
+        });
+    });
+
+    // Função de classificação
+    function sortTable(columnIndex, asc = true) {
+        rows.sort((a, b) => {
+            const aValue = a.cells[columnIndex].textContent.trim();
+            const bValue = b.cells[columnIndex].textContent.trim();
+            return asc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        });
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Adiciona eventos de clique às colunas para classificar
+    const headers = Array.from(table.querySelectorAll('thead th'));
+    headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const isAscending = header.classList.contains('asc');
+            headers.forEach(header => header.classList.remove('asc', 'desc'));
+            if (isAscending) {
+                header.classList.add('desc');
+            } else {
+                header.classList.add('asc');
+            }
+            sortTable(index, !isAscending);
+        });
+    });
+
+    // Função de filtro de colunas
+    document.querySelectorAll('.column-filter').forEach(select => {
+        select.addEventListener('change', function () {
+            const columnIndex = parseInt(this.dataset.columnIndex);
+            const filterValue = this.value.toLowerCase();
+            rows.forEach(row => {
+                const cellValue = row.cells[columnIndex].textContent.trim().toLowerCase();
+                row.style.display = filterValue === 'todos' || cellValue === filterValue ? '' : 'none';
+            });
+        });
+    });
+
+    // Função de paginação
+    let currentPage = 1;
+    let objectsPerPage = 10;
+
+    function showPage(page) {
+        console.log(page)
+        const start = (page - 1) * objectsPerPage;
+        const end = start + objectsPerPage;
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+    }
+
+    function updatePageNumbers() {
+        const totalPages = Math.ceil(rows.length / objectsPerPage);
+        const pageNumberContainer = document.getElementById('page-numbers');
+        pageNumberContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageNumberButton = document.createElement('button');
+            pageNumberButton.textContent = i;
+            pageNumberButton.classList.add('page-button');
+            if (i === currentPage) {
+                pageNumberButton.classList.add('active');
+            }
+            pageNumberButton.addEventListener('click', function () {
+                currentPage = i;
+                showPage(currentPage);
+                updatePageNumbers();
+            });
+            pageNumberContainer.appendChild(pageNumberButton);
+        }
+    }
+
+    function goToPrevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    }
+
+    function goToNextPage() {
+        
+        const maxPage = Math.ceil(rows.length / objectsPerPage);
+        console.log(rows.length )
+        if (currentPage < maxPage) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    }
+    
+
+    showPage(currentPage);
+
+    document.getElementById('prev-page').addEventListener('click', goToPrevPage);
+    document.getElementById('next-page').addEventListener('click', goToNextPage);
+
+    document.getElementById('objects-per-page').addEventListener('change', function () {
+        
+        objectsPerPage = parseInt(this.value);
+        console.log(objectsPerPage)
+        showPage(currentPage);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('myTable-1');
+    const tbody = table.querySelector('tbody');
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Função de pesquisa
+    document.getElementById('search-input-1').addEventListener('input', function () {
+        const searchText = this.value.toLowerCase();
+        rows.forEach(row => {
+            const cells = Array.from(row.querySelectorAll('td'));
+            const found = cells.some(cell => cell.textContent.toLowerCase().includes(searchText));
+            row.style.display = found ? '' : 'none';
+        });
+    });
+
+    // Função de classificação
+    function sortTable(columnIndex, asc = true) {
+        rows.sort((a, b) => {
+            const aValue = a.cells[columnIndex].textContent.trim();
+            const bValue = b.cells[columnIndex].textContent.trim();
+            return asc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        });
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Adiciona eventos de clique às colunas para classificar
+    const headers = Array.from(table.querySelectorAll('thead th'));
+    headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const isAscending = header.classList.contains('asc');
+            headers.forEach(header => header.classList.remove('asc', 'desc'));
+            if (isAscending) {
+                header.classList.add('desc');
+            } else {
+                header.classList.add('asc');
+            }
+            sortTable(index, !isAscending);
+        });
+    });
+
+    // Função de filtro de colunas
+    document.querySelectorAll('.column-filter').forEach(select => {
+        select.addEventListener('change', function () {
+            const columnIndex = parseInt(this.dataset.columnIndex);
+            const filterValue = this.value.toLowerCase();
+            rows.forEach(row => {
+                const cellValue = row.cells[columnIndex].textContent.trim().toLowerCase();
+                row.style.display = filterValue === 'todos' || cellValue === filterValue ? '' : 'none';
+            });
+        });
+    });
+
+    // Função de paginação
+    let currentPage = 1;
+    let objectsPerPage = 10;
+
+    function showPage(page) {
+        console.log(page)
+        const start = (page - 1) * objectsPerPage;
+        const end = start + objectsPerPage;
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+    }
+
+    function updatePageNumbers() {
+        const totalPages = Math.ceil(rows.length / objectsPerPage);
+        const pageNumberContainer = document.getElementById('page-numbers');
+        pageNumberContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageNumberButton = document.createElement('button');
+            pageNumberButton.textContent = i;
+            pageNumberButton.classList.add('page-button');
+            if (i === currentPage) {
+                pageNumberButton.classList.add('active');
+            }
+            pageNumberButton.addEventListener('click', function () {
+                currentPage = i;
+                showPage(currentPage);
+                updatePageNumbers();
+            });
+            pageNumberContainer.appendChild(pageNumberButton);
+        }
+    }
+
+    function goToPrevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    }
+
+    function goToNextPage() {
+        
+        const maxPage = Math.ceil(rows.length / objectsPerPage);
+        console.log(rows.length )
+        if (currentPage < maxPage) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    }
+    
+
+    showPage(currentPage);
+
+    document.getElementById('prev-page-1').addEventListener('click', goToPrevPage);
+    document.getElementById('next-page-1').addEventListener('click', goToNextPage);
+
+    document.getElementById('objects-per-page-1').addEventListener('change', function () {
+        
+        objectsPerPage = parseInt(this.value);
+        showPage(currentPage);
+    });
+});
+    
+
+    
 </script>
+
 
 {% endblock javascripts %}

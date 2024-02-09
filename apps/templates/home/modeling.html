@@ -44,6 +44,16 @@
                 <div class="card ">
                   <div class="card-header">
                     <h4 class="card-title">Modelagem</h4>
+                    <label>Deseja trabalhar em qual projeto agora? </label>
+                        <form id="projeto_form" method="post" action="{% url 'modelagem' %}">
+                            {% csrf_token %}
+                            <select name="escolha" id="projeto_select" class="styled-select">
+                                {% for projeto in nomes_projeto %}
+                                <option value="{{projeto.id}}" {% if nome == projeto.nome  %}selected{% endif %}>{{projeto.nome}}</option>                                
+                                {% endfor %}
+                            
+                            </select>
+                        </form>
                   </div>
                   <div class="card-body">
                     <div class="sidebar_modeling">
@@ -92,6 +102,8 @@
                             Novo Diagrama
                         </button>
                         
+                        <form name = "formModal" id = "formModal" class = "form-horizontal" enctype="multipart/form-data" method="post" action = "{% url 'salvar_projeto_modelagem' escolha.id%}">
+                            {% csrf_token %}
                         <!-- Modal -->
                         <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document" style="max-width: 1200px;">
@@ -105,15 +117,15 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
-                                        <input type="text" class="form-control" id="projeto-nome">
+                                        <input type="text" class="form-control" name="projeto-nome">
                                         <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
-                                        <select>
+                                        <select name="linguagem">
                                             <option value="uml">UML</option>
                                             <option value="sysml">SysML</option>
                                             <option value="sysiotml">SysIoTML</option>                                            
                                         </select>
                                         <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
-                                        <select>
+                                        <select name="tipo_projeto">
                                             <option value="usecase">Diagrama de Caso de Uso</option>
                                             <option value="seq">Diagrama de Sequencia</option>
                                             <option value="block">Diagrama de Bloco</option>
@@ -123,60 +135,178 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                <a href="choice.html">
-                                    <button type="button" class="btn btn-primary">Salvar diagrama</button>
-                                </a>
+                                <button type="submit" class="btn btn-primary">Salvar diagrama</button>
                                 </div>
                             </div>
                             </div>
                         </div>
+                    </form>
                     </div>
                     <div class="table-responsive">
                         <table class="table tablesorter " id="">
                           <thead class=" text-primary">
                             <tr>
-                              <th>
-                                ID
-                              </th>
-                              <th>
-                                Tipo
-                              </th>
-                              <th>
+                              <th class="text-center">
                                 Nome
                               </th>
                               <th class="text-center">
-                                
+                                Linguagem
                               </th>
                               <th class="text-center">
-                                
+                                Tipo
                               </th>
                               <th class="text-center">
-                                
+                                Ações
                               </th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>
-                                Dakota Rice
-                              </td>
-                              <td>
-                                00\00\0000
-                              </td>
-                              <td>
-                                OK
+                            {% for chave, modelagem in modelagens.items %}
+                            <tr>    
+                              <td class="text-center">
+                                {{modelagem.nome}}
+                              </td >
+                              <td class="text-center">
+                                {{modelagem.ling_model}}
                               </td>
                               <td class="text-center">
-                                <i class="tim-icons icon-upload"></i>
+                                {{modelagem.tipo}}
                               </td>
                               <td class="text-center">
-                                <i class="tim-icons icon-pencil"></i>
-                              </td>
-                              <td class="text-center">
-                                <i class="tim-icons icon-trash-simple"></i>                                
+                                <a class="btn btn-info" data-toggle="modal" data-target="#modalAdicionar{{ chave }}" onclick="carregarModelagem('{{ xml_data }}', '{{chave}}')">
+                                    <i class="bi bi-pencil"></i> Carregar Modelagem
+                                </a>
+                                <a class="btn btn-primary" data-toggle="modal" data-target="#modalEditar{{ chave }}">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a class="btn btn-danger" data-toggle="modal" data-target="#modalExcluir{{ chave }}">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </a>
                               </td>
                             </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="modalAdicionar{{ chave }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    
+                        <div class="modal-body">
+                            <div class="sidebar_modeling">
+                                <div class="toolButton" id="classButton"><img src="../../static/assets/img/class.png" alt="Classe" title="Classe"></div>
+                                <!--<div class="toolButton" id="associationButton">Adicionar Associação</div>-->
+                                <div class="toolButton" id="addUseCaseButton"><img src="../../static/assets/img/usecase.png" alt="Caso de Uso" title="Caso de Uso"></div>
+                                <div class="toolButton" id="addActorButton"><img src="../../static/assets/img/actor.png" alt="Ator" title="Ator"></div>
+                                <div class="toolButton" id="addObjectIoTButton"><img src="../../static/assets/img/iotobject.png" alt="Objeto IoT" title="Objeto IoT"></div>
+                                <div class="toolButton" id="addSensorButton"><img src="../../static/assets/img/sensor.png" alt="Sensor" title="Sensor"></div>
+                                <div class="toolButton" id="addActuatorButton"><img src="../../static/assets/img/actuator.png" alt="Atuador" title="Atuador"></div>
+                                <div class="toolButton" id="addContainerStateButton"><img src="../../static/assets/img/containerState.png" alt="Container" title="Container"></div>
+                                <div class="toolButton" id="addStateButton"><img src="../../static/assets/img/state.png" alt="Estado" title="Estado"></div>
+                                <div class="toolButton" id="addStartStateButton"><img src="../../static/assets/img/startState.png" alt="Estado Inicial" title="Estado Inicial"></div>
+                                <div class="toolButton" id="addDecisionButton"><img src="../../static/assets/img/decision.png" alt="Tomada de decisão" title="Tomada de decisão"></div>
+                                <div class="toolButton" id="addEndStateButton"><img src="../../static/assets/img/endState.png" alt="Estado Final" title="Estado Final"></div>
+                                <div class="toolButton" id="addObjectButton"><img src="../../static/assets/img/stateThing.png" alt="Objeto" title="Objeto"></div>
+                                <div class="toolButton" id="addValueTypeButton"><img src="../../static/assets/img/valuetype.png" alt="Tipo Valor" title="Tipo Valor"></div>
+                                <div class="toolButton" id="addBlockButton"><img src="../../static/assets/img/block.png" alt="Bloco" title="Bloco"></div>
+                                <div class="toolButton" id="addObjectLifeLineButton"><img src="../../static/assets/img/objectlifeline.png" height="70px" alt="Linha de Vida" title="Linha de Vida"></div>
+                                <div class="toolButton" id="addActorLifeLineButton"><img src="../../static/assets/img/actorlifeline.png" height="70px" alt="Ator Linha de Vida" title="Ator Linha de Vida"></div>
+                                <div class="toolButton" id="addActivationBarButton"><img src="../../static/assets/img/ativacao.png" height="70px"alt="Barra de Ativação" title="Barra de Ativação"></div>
+                                <div class="toolButton" id="addLine1Button"><img src="../../static/assets/img/linha1.png" height="70px"  alt="linha" title="Linha"></div>
+                                <div class="toolButton" id="addLine2Button"><img src="../../static/assets/img/linha2.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine3Button"><img src="../../static/assets/img/linha3.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine4Button"><img src="../../static/assets/img/linha4.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine5Button"><img src="../../static/assets/img/linha5.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine6Button"><img src="../../static/assets/img/linha6.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine7Button"><img src="../../static/assets/img/linha7.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine8Button"><img src="../../static/assets/img/linha8.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine9Button"><img src="../../static/assets/img/linha9.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine10Button"><img src="../../static/assets/img/linha10.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine11Button"><img src="../../static/assets/img/linha11.png" height="70px"alt="linha" title="linha"></div>
+                                <div class="toolButton" id="addLine12Button"><img src="../../static/assets/img/linha12.png" height="70px"alt="linha" title="linha"></div>
+                                <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
+                            </div>
+                            <div id="graphContainer{{chave}}" style="width: calc(100% - 220px); height: 500px; border: solid; margin-left: 220px;"></div>
+                            <button id="saveButton" onclick="handleSaveButtonClick()">Salvar Diagrama</button>
+                            <button id="loadButton">Carregar Diagrama</button>
+                            <button id="downloadXMLButton">Download em XML</button>
+                            <button id="downloadPDFButton">Download em PDF</button>
+                            <button id="downloadPNGButton">Download em Imagem</button>
+                            <input type="file" id="fileInput" accept=".xml">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <form name = "modalExcluir{{ chave }}" id = "modalExcluir{{ chave }}" class = "form-horizontal" method="post" action = "{% url 'excluir_modelagem' escolha.id chave%}">
+                    {% csrf_token %}
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalExcluir{{ chave }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <h1 for="projeto-nome-excluir" class="col-form-label">Você tem certeza que deseja excluir esta modelagem: {{modelagem.nome}}</h1>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                <button type="submit" class="btn btn-primary">Excluir Requisito</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form name = "modalEditar{{ chave }}" id = "modalEditar{{ chave }}" class = "form-horizontal" enctype="multipart/form-data" method="post" action = "{% url 'editar_projeto_modelagem' escolha.id chave%}">
+                        {% csrf_token %}
+                    <!-- Modal -->
+                    <div class="modal fade" id="modalEditar{{ chave }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="max-width: 1200px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
                             
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
+                                    <input type="text" class="form-control" name="projeto-nome" value="{{modelagem.nome}}">
+                                    <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
+                                    <select name="linguagem">
+                                        <option value="uml" {% if "uml" in modelagem.ling_model %}selected{% endif %}>UML</option>
+                                        <option value="sysml" {% if "sysml" in modelagem.ling_model %}selected{% endif %}>SysML</option>
+                                        <option value="sysiotml" {% if "sysiotml" in modelagem.ling_model %}selected{% endif %}>SysIoTML</option>                                            
+                                    </select>
+                                    <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
+                                    <select name="tipo_projeto">
+                                        <option value="usecase" {% if "usecase" in modelagem.tipo %}selected{% endif %}>Diagrama de Caso de Uso</option>
+                                        <option value="seq" {% if "seq" in modelagem.tipo %}selected{% endif %}>Diagrama de Sequencia</option>
+                                        <option value="block" {% if "block" in modelagem.tipo %}selected{% endif %}>Diagrama de Bloco</option>
+                                        <option value="machine" {% if "machine" in modelagem.tipo %}selected{% endif %}>Diagrama de Máquina de Estado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Salvar diagrama</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+
+                            {%endfor%}
                           </tbody>
                         </table>
                       </div>
@@ -227,8 +357,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.0/canvg.min.js"></script>
 
 <script>
+
+
+    document.getElementById('projeto_select').addEventListener('change', function() {
+        document.getElementById('projeto_form').submit();
+    });
+
     // Inicialização do mxGraph
-    const container = document.getElementById('graphContainer');
+    let container = document.getElementById('graphContainer');
     const graph = new mxGraph(container);
 
     const parent = graph.getDefaultParent();
@@ -1670,6 +1806,33 @@ var dlLink = document.createElement('a');
         };
         reader.readAsText(file);
       }
+    });
+
+    function carregarModelagem(xml_data, codigo) {
+        const file = new Blob([xml_data], { type: 'text/xml' });
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const xml = e.target.result;
+            loadGraphFromXml(xml);
+        };
+        reader.readAsText(file);
+        container = document.getElementById('graphContainer'+codigo)
+        createGraph(document.getElementById('graphContainer'+codigo));
+        console.log('graphContainer'+codigo)
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const xml = e.target.result;
+                loadGraphFromXml(xml);
+            };
+            reader.readAsText(file);
+        }
     });
 
     // Função para carregar o gráfico a partir de um XML

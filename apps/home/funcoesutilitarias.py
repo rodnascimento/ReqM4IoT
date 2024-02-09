@@ -12,9 +12,7 @@ def criar_projeto(dados_projeto, id_usuario):
     dados = {
         'requisitos_funcionais': [],
         'requisitos_nao_funcionais': {},
-        'casos_de_uso': [],
-        'maquina_de_estados': [{'nome': Texto, 'imagem': 'texto'}],
-        'sequencia': [{'nome': Texto, 'imagem': 'texto'}],
+        'modelagens': {0:{'nome':'nome', 'ling_model': 'ling_model', 'tipo': 'tipo', 'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>'}},
         'requisitos_iot': {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]},
         'modelo_dict': {
             'centroids': "modelo_carregado.cluster_centers_.tolist()",
@@ -26,9 +24,7 @@ def criar_projeto(dados_projeto, id_usuario):
     dados = {
         'requisitos_funcionais': [],
         'requisitos_nao_funcionais': {},
-        'casos_de_uso': [],
-        'maquina_de_estados': [{'nome': 'Texto', 'imagem': 'texto'}],
-        'sequencia': [{'nome': 'Texto', 'imagem': 'texto'}],
+        'modelagens': {},
         'requisitos_iot': {"Contextualizados":[], "SensoresIncompletos":[],"AtuadoresIncompletos":[]},
         'classificador': {
             'centroids': False,
