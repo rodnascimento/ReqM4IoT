@@ -145,23 +145,12 @@ def requirements(request):
         escolha.id=0
         requisitos_funcionais={}
     
-    page = request.GET.get('page', 1)
-    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
-    try:
-        requisitos_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_paginados = paginator.page(paginator.num_pages)
-
 
     requisitos_iot = json.loads(escolha.dados)['requisitos_iot']
-    print(requisitos_iot)
     Contex = requisitos_iot['Contextualizados']
     Sensores = requisitos_iot['SensoresIncompletos']
     Atuadores = requisitos_iot["AtuadoresIncompletos"]
     Data = []
-    print(len(requisitos_funcionais))
     for i in range(len(requisitos_funcionais)):
         aux = []
         aux.append(i in Contex)
@@ -172,16 +161,8 @@ def requirements(request):
         else:
             continue
     
-    page = request.GET.get('page2', 1)
-    paginator = Paginator(Data, 10)  # 10 requisitos por página
-    try:
-        requisitos_iot_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_iot_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_iot_paginados = paginator.page(paginator.num_pages)
 
-    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
+    return render(request, 'home/requirements.html',  {'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, "requisitos":lista_de_objetos, 'requisitos_iot':Data})
 
 @login_required(login_url="/login/")
 def processamento_requisito(request):
@@ -278,8 +259,8 @@ def processamento_requisito_editar(request):
 
     if request.method == 'POST':
         requisito  = request.POST.get('requisito', '')
-        data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
-        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
+        data_sintatico, headings_sintatico, requisitos = caminho(1,{0:[requisito,'Funcional']})
+        data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,{0:[requisito,'Funcional']})
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
@@ -353,20 +334,8 @@ def salvar_requisito(request, id):
         dados['requisitos_funcionais'].append(requisito)
     projeto.dados = json.dumps(dados)
     projeto.save()
-    
-    requisitos_funcionais = obter_requisitos(projeto)
-    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
-    try:
-        requisitos_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_paginados = paginator.page(paginator.num_pages)
-
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+    return redirect(requirements)
 
 
 @login_required(login_url="/login/")
@@ -383,22 +352,7 @@ def excluir_requisito(request, id, id_requisito):
 
     projeto.dados = json.dumps(dados)
     projeto.save()
-    projetos_usuario = list(filtrar_projetos_usuario(request.user))
-    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    
-    requisitos_funcionais = obter_requisitos(projeto)
-    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
-    try:
-        requisitos_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_paginados = paginator.page(paginator.num_pages)
-
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados})
+    return redirect(requirements)
 
 def editar_requisito(request, id, id_requisito):
     requisito  = request.POST.get(f'requisito{id_requisito}', '')
@@ -407,7 +361,6 @@ def editar_requisito(request, id, id_requisito):
 
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
-
     if requisito in dados['requisitos_funcionais']:
         dados['requisitos_funcionais'].pop(id_requisito)
         if classe=='Functional':
@@ -433,45 +386,8 @@ def editar_requisito(request, id, id_requisito):
                     dados['requisitos_nao_funcionais'][classe]=[requisito]
     projeto.dados = json.dumps(dados)
     projeto.save()
-    projetos_usuario = list(filtrar_projetos_usuario(request.user))
-    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    requisitos_funcionais = obter_requisitos(projeto)
-    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(lista_de_objetos, 10)  # 10 requisitos por página
-    try:
-        requisitos_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_paginados = paginator.page(paginator.num_pages)
-
-    requisitos_iot = json.loads(projeto.dados)['requisitos_iot']
-    Contex = requisitos_iot['Contextualizados']
-    Sensores = requisitos_iot['SensoresIncompletos']
-    Atuadores = requisitos_iot["AtuadoresIncompletos"]
-    Data = []
-    for i in range(len(requisitos_funcionais)):
-        aux = []
-        aux.append(i in Contex)
-        aux.append(i in Sensores)
-        aux.append(i in Atuadores)
-        if True in aux:
-            Data.append((requisitos_funcionais[i][0], aux))
-        else:
-            continue
-    
-    page = request.GET.get('page2', 1)
-    paginator = Paginator(Data, 10)  # 10 requisitos por página
-    try:
-        requisitos_iot_paginados = paginator.page(page)
-    except PageNotAnInteger:
-        requisitos_iot_paginados = paginator.page(1)
-    except EmptyPage:
-        requisitos_iot_paginados = paginator.page(paginator.num_pages)
-
-    return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
+    return redirect(requirements)
+    #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":lista_de_objetos, 'requisitos_iot':Data})
 
 @login_required(login_url="/login/")
 def classificador_iot(request,id):
@@ -483,29 +399,6 @@ def classificador_iot(request,id):
     dados['classificador']=pesos
     projeto.dados = json.dumps(dados)
     projeto.save()
-    projetos_usuario = list(filtrar_projetos_usuario(request.user))
-    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    requisitos_funcionais = obter_requisitos(projeto)
-    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
-
-    page = request.GET.get('page2', 1)
-    requisitos_iot = json.loads(projeto.dados)['requisitos_iot']
-    Contex = requisitos_iot['Contextualizados']
-    Sensores = requisitos_iot['SensoresIncompletos']
-    Atuadores = requisitos_iot["AtuadoresIncompletos"]
-    Data = []
-    for i in range(len(requisitos_funcionais)):
-        aux = []
-        aux.append(i in Contex)
-        aux.append(i in Sensores)
-        aux.append(i in Atuadores)
-        if True in aux:
-            Data.append((requisitos_funcionais[i][0], aux))
-        else:
-            continue
-
-
-    #return render(request, 'home/requirements.html',  {'escolha': projeto,'nome': projeto.nome_projeto, 'nomes_projeto': projetos_usuario, "requisitos":requisitos_paginados, 'requisitos_iot':requisitos_iot_paginados})
     return redirect('requisitos')
 
 @login_required(login_url="/login/")
@@ -537,7 +430,43 @@ def editar_usuario(request):
 
 @login_required(login_url="/login/")
 def modeling(request):
-    return render(request, 'home/modeling.html',)
+    projetos_usuario = list(filtrar_projetos_usuario(request.user))
+    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
+    
+    escolha = request.POST.get('escolha', projetos_usuario[0]['id'])
+
+    escolha = Projetos.objects.get(id=escolha)
+    dados = json.loads(escolha.dados)['modelagens']
+
+    nome=escolha.nome_projeto
+
+    return render(request, 'home/modeling.html',{'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, 'modelagens':dados})
+
+@login_required(login_url="/login/")
+def salvar_projeto_modelagem(request,id):
+    projetos_usuario = list(filtrar_projetos_usuario(request.user))
+    projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
+
+    nome_diagrama = request.POST.get('projeto-nome', '')
+    tipo_projeto = request.POST.get('tipo_projeto', '')
+    linguagem = request.POST.get('linguagem', '')
+    
+    escolha = Projetos.objects.get(id=id)
+    
+    nome=escolha.nome_projeto
+    dados = json.loads(escolha.dados)
+    
+    if(len([float(i) for i in list(dados['modelagens'].keys())])==0):
+        indice=0
+        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>' }
+    else:
+        indice = max([int(i) for i in list(dados['modelagens'].keys())])+1
+        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>' }
+    dados['modelagens'][indice]=aux
+    escolha.dados = json.dumps(dados)
+    escolha.save()
+
+    return redirect(modeling)
 
 @login_required(login_url="/login/")
 def salvar_modelagem(request):
@@ -558,3 +487,35 @@ def about(request):
 
 def help(request):
     return render(request, 'home/help.html',)
+
+@login_required(login_url="/login/")
+def excluir_modelagem(request, id, id_modelagem):
+    projeto = Projetos.objects.get(id=id)
+    dados = json.loads(projeto.dados)
+    dados['modelagens'].pop(str(id_modelagem))
+    indices=[i for i in list(dados['modelagens'].keys())]
+    novos_dados={}
+    for i, indice in enumerate(indices):
+        novos_dados[str(i)]=dados['modelagens'][indice]
+    dados['modelagens']=novos_dados
+    projeto.dados = json.dumps(dados)
+    projeto.save()
+    return redirect(modeling)
+
+@login_required(login_url="/login/")
+def editar_projeto_modelagem(request,id,id_modelagem):
+    nome_diagrama = request.POST.get('projeto-nome', '')
+    tipo_projeto = request.POST.get('tipo_projeto', '')
+    linguagem = request.POST.get('linguagem', '')
+    escolha = Projetos.objects.get(id=id)
+    nome=escolha.nome_projeto
+    dados = json.loads(escolha.dados)
+    modelagem_anterior = dados['modelagens'][str(id_modelagem)]['dados']
+    dados['modelagens'].pop(str(id_modelagem))
+    aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':modelagem_anterior}
+    dados['modelagens'][str(id_modelagem)]=aux
+    escolha.dados = json.dumps(dados)
+    escolha.save()
+
+    return redirect(modeling)
+
