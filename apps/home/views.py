@@ -60,26 +60,29 @@ def membros(request):
     for usuario in usuarios:
         membros += "<tr>"
         membros += f"<td>{usuario.username}</td>"
-        membros += f'<td><a class="btn btn-danger excluir-membro" data-usuario-id="{usuario.id}"><i class="bi bi-trash"></i> Excluir</a></td>'
+        membros += f'<td><a class="btn btn-danger excluir-membro" data-usuario-id="{usuario.id}" projeto-id="{projeto_id}"><i class="bi bi-trash"></i> Excluir</a></td>'
         membros += "</tr>"
 
     # Script JavaScript para manipular o clique nos botões de exclusão
     script_js = '''
+    <input type="hidden" name="csrfmiddlewaretoken" value="YAzatK31Sq3BSuuozWpX4nhOodDdRrtEUtRThOsnU6wMGnxLVog8DSot9oS4aSPp">
     <script>
+        var csrfToken = $('input[name="csrfmiddlewaretoken"]').attr('value');
+        console.log(csrfToken)
         document.addEventListener('click', function (event) {
             if (event.target.classList.contains('excluir-membro')) {
                 var usuarioId = event.target.getAttribute('data-usuario-id');
+                var projetoId = event.target.getAttribute('projeto-id');
                 $.ajax({
-                    url: "{% url 'excluir_membro'%}",
+                    url: "/excluir_membro",
                     type: 'POST',
                     data: {
-                        csrfmiddlewaretoken: $('{% csrf_token %}').val(),
-                        id_usuario: usuarioId
+                        csrfmiddlewaretoken: csrfToken,
+                        id_usuario: usuarioId,
+                        id_projeto: projetoId
                     },
                     success: function (data) {
-                        // Se a exclusão for bem-sucedida, você pode querer recarregar a lista de membros
-                        // por exemplo:
-                        // window.location.reload();
+                        window.location.reload();
                     },
                     error: function (error) {
                         console.log(error);
@@ -121,10 +124,13 @@ def membros(request):
 def excluir_membro(request):
     if request.method == 'POST' and request.is_ajax():
         usuario_id = request.POST.get('id_usuario')
-        # Coloque sua lógica para excluir o membro aqui
-        # Por exemplo:
-        # Membro.objects.get(id=usuario_id).delete()
-        return JsonResponse({'success': True})
+        projeto_id = request.POST.get('id_projeto')
+        try:
+            ProjetosUsuarios.objects.filter(user=usuario_id,projeto=projeto_id).delete()
+            print('passei')
+            return JsonResponse({'success': False})
+        except:
+            return JsonResponse({'success': False})
     else:
         return JsonResponse({'success': False})
 
