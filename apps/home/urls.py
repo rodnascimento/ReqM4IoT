@@ -32,8 +32,6 @@ urlpatterns = [
 
     path('modelagem',views.modeling, name='modelagem'),
 
-    path('salvar_modelagem',views.salvar_modelagem, name='salvar_modelagem'),
-
     path('about',views.about, name='about'),
     path('help',views.help, name='help'),
 

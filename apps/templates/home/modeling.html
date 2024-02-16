@@ -88,9 +88,9 @@
                         </form>
                   </div>
                   <div class="card-body">
+                    <input type="hidden" id="projeto_editado" data-projeto-modelagem="valorInicialDoAtributo" />
                     <div class="sidebar_modeling">
                         <div class="toolButton" id="classButton"><img src="../../static/assets/img/class.png" alt="Classe" title="Classe"></div>
-                        <!--<div class="toolButton" id="associationButton">Adicionar Associação</div>-->
                         <div class="toolButton" id="addUseCaseButton"><img src="../../static/assets/img/usecase.png" alt="Caso de Uso" title="Caso de Uso"></div>
                         <div class="toolButton" id="addActorButton"><img src="../../static/assets/img/actor.png" alt="Ator" title="Ator"></div>
                         <div class="toolButton" id="addObjectIoTButton"><img src="../../static/assets/img/iotobject.png" alt="Objeto IoT" title="Objeto IoT"></div>
@@ -461,7 +461,10 @@
     function carregarModelagem(xmlData, chave) {
         $('#save2Button').hide()
       $('#editButton').show()
-      console.log(xmlData)
+      var input = document.getElementById("projeto_editado");
+      var cod_projeto = document.getElementById("projeto_select").value;
+      var novoValor = cod_projeto+'/'+chave;
+      input.dataset.projetoModelagem = novoValor;
       
       if (xmlData) {
           loadGraphFromXml(xmlData);
@@ -469,21 +472,48 @@
     }
 
     //atualizar XML    
-    function enviarXMLParaDjango(xmlData, chave) {
-        // Use XMLHttpRequest para enviar o XML para o backend Django
+    function enviarXMLParaDjango() {
+        
+        const encoder = new mxCodec();
+        const node = encoder.encode(graph.getModel());
+        const xml = new XMLSerializer().serializeToString(node);
+
+        var formData = new FormData();
+
+        // Adicionar o XML
+        formData.append("xmlData", xml);
+        var input = document.getElementById("projeto_editado");
+        // Adicionar outros dados, por exemplo:
+        formData.append("codigo", input.dataset.projetoModelagem);
+
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/atualizar-xml/", true);
-        xhr.setRequestHeader("Content-Type", "application/xml");
+        xhr.open("POST", "/salvar_modelagem", true);
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log("XML enviado com sucesso!");
-            }
-        };
+        var csrfToken = getCookie('csrftoken');
+    
+        // Definir o cabeçalho com o token CSRF
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
 
-        xhr.send(xmlData);
+
+        xhr.send(formData);
+        $('#save2Button').show()
+      $('#editButton').hide()
     }
 
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
     //cria Class
     document.getElementById('classButton').addEventListener('click', function() {
         const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Classe', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');

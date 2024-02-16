@@ -461,7 +461,6 @@ def editar_requisito(request, id, id_requisito):
 def classificador_iot(request,id):
     projeto = Projetos.objects.get(id=id)
     dados = json.loads(projeto.dados)
-    print(obter_requisitos(projeto))
     save,requisitos_iot,pesos = caminho(3, obter_requisitos(projeto))
     dados['requisitos_iot']=save
     dados['classificador']=pesos
@@ -514,7 +513,6 @@ def modeling(request):
 def salvar_projeto_modelagem(request,id):
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    print(request.POST.get('projeto-xml'))
     nome_diagrama = request.POST.get('projeto-nome', '')
     tipo_projeto = request.POST.get('tipo_projeto', '')
     linguagem = request.POST.get('linguagem', '')
@@ -540,15 +538,23 @@ def salvar_projeto_modelagem(request,id):
 def salvar_modelagem(request):
     if request.method == 'POST':
         try:
-            xml_data = request.body.decode('utf-8')
-            print(xml_data)
+            xml_data = request.POST.get('xmlData')
+            id_projeto,id_modelagem = request.POST.get('codigo').split('/')
+            escolha = Projetos.objects.get(id=int(id_projeto))
+            print('Cheguei: ', escolha.nome_projeto)
+            
+            dados = json.loads(escolha.dados)
+            dados['modelagens'][id_modelagem]['dados']=xml_data
+        
+            escolha.dados = json.dumps(dados)
+            escolha.save()
             response_data = {'status': 'success', 'message': 'Diagrama salvo com sucesso.'}
             print(response_data)
 
         except Exception as e:
             response_data = {'status': 'error', 'message': f'Erro ao salvar o diagrama: {str(e)}'}
 
-    return render(request, 'home/modeling.html',)
+    return redirect(modeling)
 
 def about(request):
     return render(request, 'home/about.html',)
