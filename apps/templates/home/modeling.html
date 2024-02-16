@@ -134,7 +134,6 @@
                     <div id="graphContainer" style="width: calc(100% - 220px); height: 500px; border: solid;"></div>
                     
                     <label id="downloadXMLButton" class="custom-file-input" style="color: #f0f0f0;">Download em XML</label>
-                    <label id="downloadPDFButton" class="custom-file-input" style="color: #f0f0f0;">Download em PDF</label>
                     <label id="downloadPNGButton" class="custom-file-input" style="color: #f0f0f0;">Download em Imagem</label>
                     
 
@@ -145,9 +144,12 @@
 
                     <div class="table-responsive">
                        <!-- Botão para acionar modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
-                            Novo Diagrama
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo" id="save2Button"> 
+                            Salvar Diagrama
                         </button>
+
+                        
+                        <button type="button" class="btn btn-primary" id="editButton" onclick="enviarXMLParaDjango()" style="display: none;">Salvar Diagrama</button >
                         
                         <form name = "formModal" id = "formModal" class = "form-horizontal" enctype="multipart/form-data" method="post" action = "{% url 'salvar_projeto_modelagem' escolha.id%}">
                             {% csrf_token %}
@@ -163,9 +165,9 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
+                                        <label for="projeto-nome" >Nome do Diagrama:</label>
                                         <input type="text" class="form-control" name="projeto-nome">
-                                        <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
+                                        <label for="projeto-nome" >Linguagem de Modelagem:</label>
                                     
                                         <select name="linguagem" class="form-control">
 
@@ -173,7 +175,7 @@
                                             <option value="sysml">SysML</option>
                                             <option value="sysiotml">SysIoTML</option>                                            
                                         </select>
-                                        <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
+                                        <label for="projeto-nome" >Tipo do Diagrama:</label>
                                         <select name="tipo_projeto" class="form-control">
 
                                             <option value="usecase">Diagrama de Caso de Uso</option>
@@ -181,11 +183,12 @@
                                             <option value="block">Diagrama de Bloco</option>
                                             <option value="machine">Diagrama de Máquina de Estado</option>
                                         </select>
+                                        <input type="text" class="form-control" name="projeto-xml" id="projeto-xml" hidden>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-primary">Salvar diagrama</button>
+                                <button type="submit" class="btn btn-primary" onclick="saveXML()">Salvar diagrama</button>
                                 </div>
                             </div>
                             </div>
@@ -223,9 +226,8 @@
                                 {{modelagem.tipo}}
                               </td>
                               <td class="text-center">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#modalAdicionar{{ chave }}" onclick="carregarModelagem('{{ xml_data }}', '{{chave}}')">
-                                    <i class="bi bi-pencil"></i> Carregar Modelagem
-                                </a>
+                                <button class="btn btn-info" onclick="carregarModelagem('{{modelagem.dados}}', '{{chave}}')" ><i class="bi bi-pencil"></i> Carregar Modelagem</button>
+                            
                                 <a class="btn btn-primary" data-toggle="modal" data-target="#modalEditar{{ chave }}">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
@@ -234,62 +236,7 @@
                                 </a>
                               </td>
                             </tr>
-                <!-- Modal -->
-                <div class="modal fade" id="modalAdicionar{{ chave }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                    
-                        <div class="modal-body">
-                            <div class="sidebar_modeling">
-                                <div class="toolButton" id="classButton"><img src="../../static/assets/img/class.png" alt="Classe" title="Classe"></div>
-                                <!--<div class="toolButton" id="associationButton">Adicionar Associação</div>-->
-                                <div class="toolButton" id="addUseCaseButton"><img src="../../static/assets/img/usecase.png" alt="Caso de Uso" title="Caso de Uso"></div>
-                                <div class="toolButton" id="addActorButton"><img src="../../static/assets/img/actor.png" alt="Ator" title="Ator"></div>
-                                <div class="toolButton" id="addObjectIoTButton"><img src="../../static/assets/img/iotobject.png" alt="Objeto IoT" title="Objeto IoT"></div>
-                                <div class="toolButton" id="addSensorButton"><img src="../../static/assets/img/sensor.png" alt="Sensor" title="Sensor"></div>
-                                <div class="toolButton" id="addActuatorButton"><img src="../../static/assets/img/actuator.png" alt="Atuador" title="Atuador"></div>
-                                <div class="toolButton" id="addContainerStateButton"><img src="../../static/assets/img/containerState.png" alt="Container" title="Container"></div>
-                                <div class="toolButton" id="addStateButton"><img src="../../static/assets/img/state.png" alt="Estado" title="Estado"></div>
-                                <div class="toolButton" id="addStartStateButton"><img src="../../static/assets/img/startState.png" alt="Estado Inicial" title="Estado Inicial"></div>
-                                <div class="toolButton" id="addDecisionButton"><img src="../../static/assets/img/decision.png" alt="Tomada de decisão" title="Tomada de decisão"></div>
-                                <div class="toolButton" id="addEndStateButton"><img src="../../static/assets/img/endState.png" alt="Estado Final" title="Estado Final"></div>
-                                <div class="toolButton" id="addObjectButton"><img src="../../static/assets/img/stateThing.png" alt="Objeto" title="Objeto"></div>
-                                <div class="toolButton" id="addValueTypeButton"><img src="../../static/assets/img/valuetype.png" alt="Tipo Valor" title="Tipo Valor"></div>
-                                <div class="toolButton" id="addBlockButton"><img src="../../static/assets/img/block.png" alt="Bloco" title="Bloco"></div>
-                                <div class="toolButton" id="addObjectLifeLineButton"><img src="../../static/assets/img/objectlifeline.png" height="70px" alt="Linha de Vida" title="Linha de Vida"></div>
-                                <div class="toolButton" id="addActorLifeLineButton"><img src="../../static/assets/img/actorlifeline.png" height="70px" alt="Ator Linha de Vida" title="Ator Linha de Vida"></div>
-                                <div class="toolButton" id="addActivationBarButton"><img src="../../static/assets/img/ativacao.png" height="70px"alt="Barra de Ativação" title="Barra de Ativação"></div>
-                                <div class="toolButton" id="addLine1Button"><img src="../../static/assets/img/linha1.png" height="70px"  alt="linha" title="Linha"></div>
-                                <div class="toolButton" id="addLine2Button"><img src="../../static/assets/img/linha2.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine3Button"><img src="../../static/assets/img/linha3.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine4Button"><img src="../../static/assets/img/linha4.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine5Button"><img src="../../static/assets/img/linha5.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine6Button"><img src="../../static/assets/img/linha6.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine7Button"><img src="../../static/assets/img/linha7.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine8Button"><img src="../../static/assets/img/linha8.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine9Button"><img src="../../static/assets/img/linha9.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine10Button"><img src="../../static/assets/img/linha10.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine11Button"><img src="../../static/assets/img/linha11.png" height="70px"alt="linha" title="linha"></div>
-                                <div class="toolButton" id="addLine12Button"><img src="../../static/assets/img/linha12.png" height="70px"alt="linha" title="linha"></div>
-                                <!-- Adicione mais botões ou funcionalidades à barra lateral, se necessário -->
-                            </div>
-                            <div id="graphContainer{{chave}}" style="width: calc(100% - 220px); height: 500px; border: solid; margin-left: 220px;"></div>
-                            <button id="saveButton" onclick="handleSaveButtonClick()">Salvar Diagrama</button>
-                            <button id="loadButton">Carregar Diagrama</button>
-                            <button id="downloadXMLButton">Download em XML</button>
-                            <button id="downloadPDFButton">Download em PDF</button>
-                            <button id="downloadPNGButton">Download em Imagem</button>
-                            <input type="file" id="fileInput" accept=".xml">
-                        </div>
-                    </div>
-                    </div>
-                </div>
+               
 
                 <form name = "modalExcluir{{ chave }}" id = "modalExcluir{{ chave }}" class = "form-horizontal" method="post" action = "{% url 'excluir_modelagem' escolha.id chave%}">
                     {% csrf_token %}
@@ -309,7 +256,7 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-primary">Excluir Requisito</button>
+                                <button type="submit" class="btn btn-primary">Excluir Diagrama</button>
                                 </div>
                             </div>
                             </div>
@@ -476,12 +423,20 @@
         }
     }
 
+    function saveXML(){
+        const encoder = new mxCodec();
+        const node = encoder.encode(graph.getModel());
+        const xml = new XMLSerializer().serializeToString(node);
+
+        document.getElementById("projeto-xml").value = xml
+    }
+
     function handleSaveButtonClick(){
             // Salva o estado atual do grafo
             const encoder = new mxCodec();
             const node = encoder.encode(graph.getModel());
             const xml = new XMLSerializer().serializeToString(node);
-
+            console.log(xml)
         // Envia o XML para a view Django usando uma solicitação AJAX
         fetch('/salvar_modelagem', {
             method: 'POST',
@@ -500,6 +455,33 @@
             .catch(error => {
             console.error('Erro ao enviar o XML para a view Django:', error);
             });
+    }
+
+    //carregar modal salvo do banco
+    function carregarModelagem(xmlData, chave) {
+        $('#save2Button').hide()
+      $('#editButton').show()
+      console.log(xmlData)
+      
+      if (xmlData) {
+          loadGraphFromXml(xmlData);
+      }
+    }
+
+    //atualizar XML    
+    function enviarXMLParaDjango(xmlData, chave) {
+        // Use XMLHttpRequest para enviar o XML para o backend Django
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/atualizar-xml/", true);
+        xhr.setRequestHeader("Content-Type", "application/xml");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("XML enviado com sucesso!");
+            }
+        };
+
+        xhr.send(xmlData);
     }
 
     //cria Class
@@ -1822,34 +1804,35 @@
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
 
-        // Salva o estado atual do grafo
+        // Salva o estado atual do grafodownloadPNGButtonc
         
 
     });
 
 
-    document.getElementById('downloadPDFButton').addEventListener('click', function() {
+    //document.getElementById('downloadPDFButton').addEventListener('click', function() {
         
-    });
+    //});
     
 
     //download png
     //Isso ocorre porque os navegadores têm uma política de segurança chamada Política da Mesma Origem (Same-Origin Policy), que restringe como um documento ou script carregado de uma origem pode interagir com um recurso de outra origem. Isso é uma precaução de segurança importante para evitar ataques de Cross-Site Scripting (XSS).
     //Quando você tenta carregar uma imagem localmente (por exemplo, a partir do sistema de arquivos do seu computador), o navegador considera isso como uma origem diferente. Portanto, por padrão, ele bloqueia a tentativa de carregar a imagem devido à Política da Mesma Origem.
     document.getElementById('downloadPNGButton').addEventListener('click', function() {
-        var node = document.getElementById('graphContainer');
+        var svgContent = new XMLSerializer().serializeToString(graph.container);
 
-        domtoimage.toPng(node)
-            .then(function (dataUrl) {
-                var link = document.createElement('a');
-                link.download = 'diagrama.png';
-                link.href = dataUrl;
-                console.log(dataUrl)
-                link.click();
-            })
-            .catch(function (error) {
-                console.error('Erro ao criar a imagem!', error);
-            });
+        var blob = new Blob([svgContent], { type: 'image/svg+xml' });
+
+        var url = URL.createObjectURL(blob);
+
+        var downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = 'graph.svg';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(url);
     });
 
     // Adiciona um ouvinte de eventos para carregar XML
@@ -1865,44 +1848,34 @@
         const reader = new FileReader();
         reader.onload = function(e) {
           const xml = e.target.result;
+          console.log(xml)
           loadGraphFromXml(xml);
         };
         reader.readAsText(file);
+        
       }
+      
+        
+      
     });
 
-    function carregarModelagem(xml_data, codigo) {
-        const file = new Blob([xml_data], { type: 'text/xml' });
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const xml = e.target.result;
-            loadGraphFromXml(xml);
-        };
-        reader.readAsText(file);
-        container = document.getElementById('graphContainer'+codigo)
-        createGraph(document.getElementById('graphContainer'+codigo));
-        console.log('graphContainer'+codigo)
-    }
-
-    document.getElementById('fileInput').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const xml = e.target.result;
-                loadGraphFromXml(xml);
-            };
-            reader.readAsText(file);
-        }
-    });
 
     // Função para carregar o gráfico a partir de um XML
     function loadGraphFromXml(xml) {
       const doc = mxUtils.parseXml(xml);
       const codec = new mxCodec(doc);
       codec.decode(doc.documentElement, graph.getModel());
+      
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
     }
 
     //pega o click

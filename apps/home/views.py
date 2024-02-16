@@ -446,7 +446,7 @@ def modeling(request):
 def salvar_projeto_modelagem(request,id):
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-
+    print(request.POST.get('projeto-xml'))
     nome_diagrama = request.POST.get('projeto-nome', '')
     tipo_projeto = request.POST.get('tipo_projeto', '')
     linguagem = request.POST.get('linguagem', '')
