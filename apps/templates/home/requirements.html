@@ -243,7 +243,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <h1 for="projeto-nome-excluir" class="col-form-label">Você tem certeza que deseja excluir o requisito: {{requisito.valor}}</h1>
+                                                    <h1 for="projeto-nome-excluir" class="col-form-label">Você tem certeza que deseja excluir o requisito: {{ requisito.valor|first }}</h1>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -301,10 +301,7 @@
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function () {
-                                            // Mantenha o modal aberto após a submissão
                                             document.getElementById("analise{{requisito.chave}}").addEventListener('click', function () {
-                                                // Execute a lógica de submissão do formulário, se necessário
-                                                // Exemplo usando jQuery
                                                 
                                                 $.ajax({
                                                     url: "{% url 'processamento_requisito_editar'%}",

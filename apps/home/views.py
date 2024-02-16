@@ -29,32 +29,6 @@ def index(request):
 
 
 @login_required(login_url="/login/")
-def pages(request):
-    context = {}
-    
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
-    try:
-
-        load_template = request.path.split('/')[-1]
-
-        if load_template == 'admin':
-            return HttpResponseRedirect(reverse('admin:index'))
-        context['segment'] = load_template
-
-        html_template = loader.get_template('home/' + load_template)
-        return HttpResponse(html_template.render(context, request))
-
-    except template.TemplateDoesNotExist:
-
-        html_template = loader.get_template('home/page-404.html')
-        return HttpResponse(html_template.render(context, request))
-
-    except:
-        html_template = loader.get_template('home/page-500.html')
-        return HttpResponse(html_template.render(context, request))
-
-@login_required(login_url="/login/")
 def salva_projeto(request):
     nome = request.POST.get("projeto-nome")
     descricao = request.POST.get("descricao")
@@ -65,7 +39,100 @@ def salva_projeto(request):
 def projetos(request):
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
+
     return render(request, 'home/index.html',{'projetos': projetos_usuario})
+
+def membros(request):
+    usuario_atual = request.user.id
+    projeto_id = request.POST.get('id_projeto', '')
+    membros=''
+    usuarios = []
+    try:
+        usuarios = ProjetosUsuarios.objects.filter(projeto=projeto_id)
+        usuarios = [i for i in usuarios.values_list('user', flat=True)]
+        usuarios.pop(usuarios.index(usuario_atual))
+        usuarios = [User.objects.get(id=i) for i in usuarios]
+        print(usuarios)
+    except:
+        print("deu ruim")
+
+    membros = ""
+    for usuario in usuarios:
+        membros += "<tr>"
+        membros += f"<td>{usuario.username}</td>"
+        membros += f'<td><a class="btn btn-danger excluir-membro" data-usuario-id="{usuario.id}" projeto-id="{projeto_id}"><i class="bi bi-trash"></i> Excluir</a></td>'
+        membros += "</tr>"
+
+    # Script JavaScript para manipular o clique nos botões de exclusão
+    script_js = '''
+    <input type="hidden" name="csrfmiddlewaretoken" value="YAzatK31Sq3BSuuozWpX4nhOodDdRrtEUtRThOsnU6wMGnxLVog8DSot9oS4aSPp">
+    <script>
+        var csrfToken = $('input[name="csrfmiddlewaretoken"]').attr('value');
+        console.log(csrfToken)
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('excluir-membro')) {
+                var usuarioId = event.target.getAttribute('data-usuario-id');
+                var projetoId = event.target.getAttribute('projeto-id');
+                $.ajax({
+                    url: "/excluir_membro",
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: csrfToken,
+                        id_usuario: usuarioId,
+                        id_projeto: projetoId
+                    },
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+    '''
+
+    membros=membros+script_js
+
+    html_code = f'''
+        <div class="table-responsive">
+            <h4>Membros participantes: </h4>
+            <table class="table tablesorter ">
+            
+            <thead class=" text-primary">
+                
+                    <tr>
+                    <th>
+                    membro
+                    </th>
+                    <th>
+                    ação
+                    </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {membros}
+                </tbody>
+            </table>
+            
+        </div>
+    '''
+    return JsonResponse({'html_code': html_code})
+
+@login_required(login_url="/login/")
+def excluir_membro(request):
+    if request.method == 'POST' and request.is_ajax():
+        usuario_id = request.POST.get('id_usuario')
+        projeto_id = request.POST.get('id_projeto')
+        try:
+            ProjetosUsuarios.objects.filter(user=usuario_id,projeto=projeto_id).delete()
+            print('passei')
+            return JsonResponse({'success': False})
+        except:
+            return JsonResponse({'success': False})
+    else:
+        return JsonResponse({'success': False})
 
 @login_required(login_url="/login/")
 def editar_projeto(request, id):
@@ -357,11 +424,12 @@ def excluir_requisito(request, id, id_requisito):
 def editar_requisito(request, id, id_requisito):
     requisito  = request.POST.get(f'requisito{id_requisito}', '')
     classe  = request.POST.get(f'classe_requisito{id_requisito}', '')
-    
-
     projeto = Projetos.objects.get(id=id)
+    requisitos = obter_requisitos(projeto)
+    print(requisitos[id_requisito])
+    
     dados = json.loads(projeto.dados)
-    if requisito in dados['requisitos_funcionais']:
+    if requisitos[id_requisito][1]=='Functional':
         dados['requisitos_funcionais'].pop(id_requisito)
         if classe=='Functional':
             dados['requisitos_funcionais'].insert(id_requisito,requisito)
@@ -373,8 +441,8 @@ def editar_requisito(request, id, id_requisito):
                     dados['requisitos_nao_funcionais'][classe]=[requisito] 
     else:
         for chave,valor in dados['requisitos_nao_funcionais'].items():
-            if requisito in valor:
-                dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisito))
+            if requisitos[id_requisito][0] in valor:
+                dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisitos[id_requisito][0]))
                 break
         if classe=='Functional':
             dados['requisitos_funcionais'].append(requisito) 
