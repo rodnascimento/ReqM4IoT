@@ -503,11 +503,16 @@ def modeling(request):
     escolha = request.POST.get('escolha', projetos_usuario[0]['id'])
 
     escolha = Projetos.objects.get(id=escolha)
+
+    requisitos_funcionais = obter_requisitos(escolha)
+    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
+
+
     dados = json.loads(escolha.dados)['modelagens']
 
     nome=escolha.nome_projeto
 
-    return render(request, 'home/modeling.html',{'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, 'modelagens':dados})
+    return render(request, 'home/modeling.html',{'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, 'modelagens':dados, "requisitos":lista_de_objetos})
 
 @login_required(login_url="/login/")
 def salvar_projeto_modelagem(request,id):
@@ -516,6 +521,7 @@ def salvar_projeto_modelagem(request,id):
     nome_diagrama = request.POST.get('projeto-nome', '')
     tipo_projeto = request.POST.get('tipo_projeto', '')
     linguagem = request.POST.get('linguagem', '')
+    xml_data = request.POST.get('projeto-xml', '')
     
     escolha = Projetos.objects.get(id=id)
     
@@ -527,7 +533,7 @@ def salvar_projeto_modelagem(request,id):
         aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>' }
     else:
         indice = max([int(i) for i in list(dados['modelagens'].keys())])+1
-        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>' }
+        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':xml_data }
     dados['modelagens'][indice]=aux
     escolha.dados = json.dumps(dados)
     escolha.save()
@@ -550,6 +556,8 @@ def salvar_modelagem(request):
             escolha.save()
             response_data = {'status': 'success', 'message': 'Diagrama salvo com sucesso.'}
             print(response_data)
+
+            return redirect(about)
 
         except Exception as e:
             response_data = {'status': 'error', 'message': f'Erro ao salvar o diagrama: {str(e)}'}

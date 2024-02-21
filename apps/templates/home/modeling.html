@@ -5,6 +5,32 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <style>
+
+  
+    .overSelect {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  
+    #checkboxes {
+      display: none;
+      border: 1px #dadada solid;
+      max-height: 75px;
+      overflow: auto;
+    }
+  
+    #checkboxes label {
+      display: block;
+    }
+  
+    #checkboxes label:hover {
+      background-color: #1e90ff;
+    }
+  </style>
+<style>
     /* Estilos CSS para a barra lateral */
     .sidebar_modeling {
         width: 200px;
@@ -167,14 +193,15 @@
                                     <div class="form-group">
                                         <label for="projeto-nome" >Nome do Diagrama:</label>
                                         <input type="text" class="form-control" name="projeto-nome">
-                                        <label for="projeto-nome" >Linguagem de Modelagem:</label>
-                                    
+                                        <label for="projeto-nome" >Linguagem de Modelagem:</label>                                    
                                         <select name="linguagem" class="form-control">
 
                                             <option value="uml">UML</option>
                                             <option value="sysml">SysML</option>
                                             <option value="sysiotml">SysIoTML</option>                                            
                                         </select>
+
+
                                         <label for="projeto-nome" >Tipo do Diagrama:</label>
                                         <select name="tipo_projeto" class="form-control">
 
@@ -183,6 +210,20 @@
                                             <option value="block">Diagrama de Bloco</option>
                                             <option value="machine">Diagrama de Máquina de Estado</option>
                                         </select>
+
+                                        <label for="projeto-requisitos" >Lista de Requisitos do Projeto:</label>
+                                        <div class="multiselect">
+                                            <div class="selectBox form-control" onclick="showCheckboxes()">
+                                                <option value="" selected>Seleione os requisitos</option>
+                                            </div>
+                                            <div id="checkboxes">
+                                            {% for requisito in requisitos %}
+                                            <label for="{{chave}}">
+                                                <input type="checkbox" id="{{chave}}" />{{ requisito.valor|first }} | {{ requisito.valor|slice:"1:2"|first}}</label>
+                                            {%endfor%}
+                                              
+                                            </div>
+
                                         <input type="text" class="form-control" name="projeto-xml" id="projeto-xml" hidden>
                                     </div>
                                 </div>
@@ -376,6 +417,21 @@
 </script>
 
 <script>
+    var expanded = false;
+  
+    function showCheckboxes() {
+      var checkboxes = document.getElementById("checkboxes");
+      if (!expanded) {
+        checkboxes.style.display = "block";
+        expanded = true;
+      } else {
+        checkboxes.style.display = "none";
+        expanded = false;
+      }
+    }
+  </script>
+
+<script>
 
 
     document.getElementById('projeto_select').addEventListener('change', function() {
@@ -496,6 +552,7 @@
 
 
         xhr.send(formData);
+        location.reload();
         $('#save2Button').show()
       $('#editButton').hide()
     }
@@ -1941,28 +1998,26 @@
     document.getElementById('imageInput').addEventListener('change', handleFileSelect, false);
 
     function handleFileSelect(event) {
-    var file = event.target.files[0];
+        var file = event.target.files[0];
+        if (!file) return;
 
-    if (!file) return;
-
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        console.log(e)
-        var imageUrl = e.target.result;
-        var img = new Image();
-        img.onload = function() {
-        var width = 100;
-        var height = 100;
-        
-        var x = graph.container.offsetWidth / 2 - width / 2;
-        var y = graph.container.offsetHeight / 2 - height / 2;
-        
-        importImage(imageUrl, x, y, width, height);
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var imageUrl = e.target.result;
+            var img = new Image();
+            img.onload = function() {
+            var width = 100;
+            var height = 100;
+            
+            var x = graph.container.offsetWidth / 2 - width / 2;
+            var y = graph.container.offsetHeight / 2 - height / 2;
+            
+            importImage(imageUrl, x, y, width, height);
+            };
+            img.src = imageUrl;
         };
-        img.src = imageUrl;
-    };
-    reader.readAsDataURL(file);
-    
+        
+        reader.readAsDataURL(file);
     }
 
     // Função para importar imagem, conforme definida no exemplo anterior
@@ -1977,6 +2032,7 @@
         height,
         'shape=image;image=' + url
         );
+        console.log(vertex)
         graph.refresh();
 
         vertex.setVertex(true); 
