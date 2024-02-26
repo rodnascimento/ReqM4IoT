@@ -18,7 +18,7 @@
     #checkboxes {
       display: none;
       border: 1px #dadada solid;
-      max-height: 75px;
+      max-height: 150px;
       overflow: auto;
     }
   
@@ -117,6 +117,7 @@
                     <input type="hidden" id="projeto_editado" data-projeto-modelagem="valorInicialDoAtributo" />
                     <div class="sidebar_modeling">
                         <div class="toolButton" id="classButton"><img src="../../static/assets/img/class.png" alt="Classe" title="Classe"></div>
+                        <div class="toolButton" id="boxButton"><img src="../../static/assets/img/class.png" alt="Box" title="Box"></div>
                         <div class="toolButton" id="addUseCaseButton"><img src="../../static/assets/img/usecase.png" alt="Caso de Uso" title="Caso de Uso"></div>
                         <div class="toolButton" id="addActorButton"><img src="../../static/assets/img/actor.png" alt="Ator" title="Ator"></div>
                         <div class="toolButton" id="addObjectIoTButton"><img src="../../static/assets/img/iotobject.png" alt="Objeto IoT" title="Objeto IoT"></div>
@@ -193,13 +194,8 @@
                                     <div class="form-group">
                                         <label for="projeto-nome" >Nome do Diagrama:</label>
                                         <input type="text" class="form-control" name="projeto-nome">
-                                        <label for="projeto-nome" >Linguagem de Modelagem:</label>                                    
-                                        <select name="linguagem" class="form-control">
+                                       
 
-                                            <option value="uml">UML</option>
-                                            <option value="sysml">SysML</option>
-                                            <option value="sysiotml">SysIoTML</option>                                            
-                                        </select>
 
 
                                         <label for="projeto-nome" >Tipo do Diagrama:</label>
@@ -243,9 +239,7 @@
                               <th class="text-center">
                                 Nome
                               </th>
-                              <th class="text-center">
-                                Linguagem
-                              </th>
+                              
                               <th class="text-center">
                                 Tipo
                               </th>
@@ -260,9 +254,6 @@
                               <td class="text-center">
                                 {{modelagem.nome}}
                               </td >
-                              <td class="text-center">
-                                {{modelagem.ling_model}}
-                              </td>
                               <td class="text-center">
                                 {{modelagem.tipo}}
                               </td>
@@ -320,12 +311,7 @@
                                 <div class="form-group">
                                     <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
                                     <input type="text" class="form-control" name="projeto-nome" value="{{modelagem.nome}}">
-                                    <label for="projeto-nome" class="col-form-label">Linguagem de Modelagem:</label>
-                                    <select name="linguagem">
-                                        <option value="uml" {% if "uml" in modelagem.ling_model %}selected{% endif %}>UML</option>
-                                        <option value="sysml" {% if "sysml" in modelagem.ling_model %}selected{% endif %}>SysML</option>
-                                        <option value="sysiotml" {% if "sysiotml" in modelagem.ling_model %}selected{% endif %}>SysIoTML</option>                                            
-                                    </select>
+                                    
                                     <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
                                     <select name="tipo_projeto">
                                         <option value="usecase" {% if "usecase" in modelagem.tipo %}selected{% endif %}>Diagrama de Caso de Uso</option>
@@ -573,7 +559,100 @@
     }
     //cria Class
     document.getElementById('classButton').addEventListener('click', function() {
-        const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Classe', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
+        const parent = graph.getDefaultParent();
+
+        // Inserindo um Value Type (retângulo)
+        const valueType = graph.insertVertex(
+        parent,
+        null,
+        '', // Nome ou rótulo do Value Type
+        100,
+        100,
+        210,
+        150,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        valueType.setVertex(true); 
+
+        // Inserindo propriedades dentro do Value Type
+        const property1 = graph.insertVertex(
+        valueType,
+        null,
+        'Nome Classe', // Propriedade 1 (Nome: Tipo)
+        0,
+        0,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        const property2 = graph.insertVertex(
+        valueType,
+        null,
+        'atributos', // Propriedade 2 (Nome: Tipo)
+        0,
+        50,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        const property3 = graph.insertVertex(
+        valueType,
+        null,
+        'metodo', // Propriedade 2 (Nome: Tipo)
+        0,
+        100,
+        210,
+        50,
+        'shape=rectangle;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;'
+        );
+
+        property1.setVertex(true); 
+        property1.setConnectable(false); 
+
+        property2.setVertex(true); 
+        property2.setConnectable(false); 
+
+        property3.setVertex(true); 
+        property3.setConnectable(false); 
+
+        // isso faz criação de coneção de seta
+        graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
+        const edge = evt.getProperty('cell'); 
+        const source = graph.getModel().getTerminal(edge, true); 
+        const target = graph.getModel().getTerminal(edge, false); 
+        if (source === valueType) {
+            // A aresta está conectada ao objeto conectável
+            console.log('Conectado ao objeto conectável');
+        }
+        });
+
+        const style = graph.getStylesheet().getDefaultEdgeStyle();
+        style[mxConstants.STYLE_STROKECOLOR] = '#000000'; 
+        style[mxConstants.STYLE_STROKEWIDTH] = 2; 
+        style[mxConstants.STYLE_ENDARROW] = 'classic'; 
+
+        graph.setConnectable(true);
+        graph.setMultigraph(false); 
+        graph.connectionHandler.setCreateTarget(true);
+        graph.connectionHandler.setCreateTargetMarker(new mxMarker(graph, '#00FF00', 8));
+
+        // Habilita a desconexão de arestas
+        graph.setDisconnectOnMove(false);
+
+        // Configura o estilo da conexão (opcional)
+        graph.connectionHandler.createEdgeState = function (me) {
+            const edge = graph.createEdge(null, null, null, null, null, 'edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;endArrow=classic;');
+            return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+        };
+
+    });
+
+    /// cria caixa
+    document.getElementById('boxButton').addEventListener('click', function() {
+        const vertex = graph.insertVertex(graph.getDefaultParent(), null, 'Texto', 100, 100, 120, 60, 'whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#000000;');
         
         // isso faz criação de coneção de seta
         graph.connectionHandler.addListener(mxEvent.CONNECT, function (sender, evt) {
