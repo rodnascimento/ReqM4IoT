@@ -416,7 +416,17 @@ def excluir_requisito(request, id, id_requisito):
         for chave,valor in dados['requisitos_nao_funcionais'].items():
             if requisito in valor:
                 dados['requisitos_nao_funcionais'][chave].pop(dados['requisitos_nao_funcionais'][chave].index(requisito))
-
+    modelagens = dados['modelagens']
+    for i in modelagens.keys():
+        if str(id_requisito) in modelagens[i]['requisitos']:
+            modelagens[i]['requisitos'].pop(modelagens[i]['requisitos'].index(str(id_requisito)))
+            aux = [str(i) if int(i)<id_requisito else str(int(i)-1) for i in modelagens[i]['requisitos']]
+            modelagens[i]['requisitos']=aux
+        else:
+            aux = [str(i) if int(i)<id_requisito else str(int(i)-1) for i in modelagens[i]['requisitos']]
+            modelagens[i]['requisitos']=aux
+            
+            
     projeto.dados = json.dumps(dados)
     projeto.save()
     return redirect(requirements)
@@ -499,23 +509,19 @@ def editar_usuario(request):
 def modeling(request):
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
-    
     escolha = request.POST.get('escolha', projetos_usuario[0]['id'])
-
     escolha = Projetos.objects.get(id=escolha)
-
     requisitos_funcionais = obter_requisitos(escolha)
-    lista_de_objetos = [{'chave': chave, 'valor': valor} for chave, valor in requisitos_funcionais.items()]
-
-
+    lista_de_objetos = [{'chave': str(chave), 'valor': valor} for chave, valor in requisitos_funcionais.items()]
     dados = json.loads(escolha.dados)['modelagens']
-
     nome=escolha.nome_projeto
+
 
     return render(request, 'home/modeling.html',{'escolha': escolha,'nome': nome, 'nomes_projeto': projetos_usuario, 'modelagens':dados, "requisitos":lista_de_objetos})
 
 @login_required(login_url="/login/")
 def salvar_projeto_modelagem(request,id):
+    requisitos_relacionados = request.POST.getlist('checkbox')
     projetos_usuario = list(filtrar_projetos_usuario(request.user))
     projetos_usuario = formatar_projetos_usuario(projetos_usuario, request.user)
     nome_diagrama = request.POST.get('projeto-nome', '')
@@ -527,13 +533,13 @@ def salvar_projeto_modelagem(request,id):
     
     nome=escolha.nome_projeto
     dados = json.loads(escolha.dados)
-    
+    print(requisitos_relacionados)
     if(len([float(i) for i in list(dados['modelagens'].keys())])==0):
         indice=0
-        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>' }
+        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':'<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>','requisitos':requisitos_relacionados }
     else:
         indice = max([int(i) for i in list(dados['modelagens'].keys())])+1
-        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':xml_data }
+        aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':xml_data,'requisitos':requisitos_relacionados}
     dados['modelagens'][indice]=aux
     escolha.dados = json.dumps(dados)
     escolha.save()
@@ -586,6 +592,7 @@ def excluir_modelagem(request, id, id_modelagem):
 
 @login_required(login_url="/login/")
 def editar_projeto_modelagem(request,id,id_modelagem):
+    requisitos_relacionados = request.POST.getlist('checkbox')
     nome_diagrama = request.POST.get('projeto-nome', '')
     tipo_projeto = request.POST.get('tipo_projeto', '')
     linguagem = request.POST.get('linguagem', '')
@@ -594,7 +601,7 @@ def editar_projeto_modelagem(request,id,id_modelagem):
     dados = json.loads(escolha.dados)
     modelagem_anterior = dados['modelagens'][str(id_modelagem)]['dados']
     dados['modelagens'].pop(str(id_modelagem))
-    aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':modelagem_anterior}
+    aux = {'nome':nome_diagrama,'ling_model':linguagem, 'tipo': tipo_projeto,'dados':modelagem_anterior, 'requisitos': requisitos_relacionados}
     dados['modelagens'][str(id_modelagem)]=aux
     escolha.dados = json.dumps(dados)
     escolha.save()

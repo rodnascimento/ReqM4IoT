@@ -29,6 +29,21 @@
     #checkboxes label:hover {
       background-color: #1e90ff;
     }
+
+    #checkboxes2 {
+      display: none;
+      border: 1px #dadada solid;
+      max-height: 150px;
+      overflow: auto;
+    }
+  
+    #checkboxes2 label {
+      display: block;
+    }
+  
+    #checkboxes2 label:hover {
+      background-color: #1e90ff;
+    }
   </style>
 <style>
     /* Estilos CSS para a barra lateral */
@@ -192,13 +207,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="projeto-nome" >Nome do Diagrama:</label>
+                                        <label for="projeto-nome" class="col-form-label">Nome do Diagrama:</label>
                                         <input type="text" class="form-control" name="projeto-nome">
-                                       
 
-
-
-                                        <label for="projeto-nome" >Tipo do Diagrama:</label>
+                                        <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
                                         <select name="tipo_projeto" class="form-control">
 
                                             <option value="usecase">Diagrama de Caso de Uso</option>
@@ -210,12 +222,12 @@
                                         <label for="projeto-requisitos" >Lista de Requisitos do Projeto:</label>
                                         <div class="multiselect">
                                             <div class="selectBox form-control" onclick="showCheckboxes()">
-                                                <option value="" selected>Seleione os requisitos</option>
+                                                <option value="" selected>Selecione os requisitos</option>
                                             </div>
                                             <div id="checkboxes">
                                             {% for requisito in requisitos %}
                                             <label for="{{chave}}">
-                                                <input type="checkbox" id="{{chave}}" />{{ requisito.valor|first }} | {{ requisito.valor|slice:"1:2"|first}}</label>
+                                                <input type="checkbox" name="checkbox" value="{{requisito.chave}}" />{{ requisito.valor|first }} | {{ requisito.valor|slice:"1:2"|first}}</label>
                                             {%endfor%}
                                               
                                             </div>
@@ -319,7 +331,20 @@
                                         <option value="block" {% if "block" in modelagem.tipo %}selected{% endif %}>Diagrama de Bloco</option>
                                         <option value="machine" {% if "machine" in modelagem.tipo %}selected{% endif %}>Diagrama de Máquina de Estado</option>
                                     </select>
+                                    <label for="projeto-requisitos" >Lista de Requisitos do Projeto:</label>
+                                    <div class="multiselect">
+                                        <div class="selectBox form-control" onclick="showCheckboxes2()">
+                                            <option value="" selected>Selecione os requisitos</option>
+                                        </div>
+                                        <div id="checkboxes2">
+                                        {% for requisito in requisitos %}
+                                        <label for="{{chave}}">
+                                            <input type="checkbox" name="checkbox" value="{{requisito.chave}}" {% if requisito.chave in modelagem.requisitos %}checked{% endif %}/>{{ requisito.valor|first }} | {{ requisito.valor|slice:"1:2"|first}}</label>
+                                        {%endfor%}
+                                          
+                                        </div>
                                 </div>
+                                
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -403,16 +428,27 @@
 </script>
 
 <script>
-    var expanded = false;
+    var expanded1 = false;
   
     function showCheckboxes() {
       var checkboxes = document.getElementById("checkboxes");
-      if (!expanded) {
+      if (!expanded1) {
         checkboxes.style.display = "block";
         expanded = true;
       } else {
         checkboxes.style.display = "none";
-        expanded = false;
+        expanded1 = false;
+      }
+    }
+    var expanded2 = false;
+    function showCheckboxes2() {
+      var checkboxes2 = document.getElementById("checkboxes2");
+      if (!expanded2) {
+        checkboxes2.style.display = "block";
+        expanded2 = true;
+      } else {
+        checkboxes2.style.display = "none";
+        expanded2 = false;
       }
     }
   </script>
