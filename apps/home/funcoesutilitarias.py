@@ -528,6 +528,7 @@ def trigram_pos(requisitos):
     return saida
 
 def caminho(escolha, requisitos):
+    print(requisitos)
     from pickle import load
     #entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')
     entrada = open('/home/bruno/Req2/ReqM4IoT/apps/static/assets/arquivos_requisitos/trigram.pkl','rb')

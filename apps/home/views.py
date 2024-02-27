@@ -245,8 +245,8 @@ def processamento_requisito(request):
         requisito  = request.POST.get('requisito', '')
         if request.method == 'POST':
             requisito  = request.POST.get('requisito', '')
-            data_sintatico, headings_sintatico, requisitos = caminho(1,[requisito])
-            data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,[requisito])
+            data_sintatico, headings_sintatico, requisitos = caminho(1,{0:[requisito,'Funcional']})
+            data_ambiguidade, headings_ambiguidade, requisitos = caminho(2,{0:[requisito,'Funcional']})
     titulo_sintatico = ""
     for head in headings_sintatico:
         titulo_sintatico=titulo_sintatico+f"<th class='text-center'> {head}</th>"
