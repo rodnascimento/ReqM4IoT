@@ -283,7 +283,7 @@
                                                 
                                                 <label >Classe:</label>
                                                 <select name="classe_requisito{{requisito.chave}}" id="classe_requisito{{requisito.chave}}" class="styled-select form-control">
-                                                    <option value="Functional" {% if "Functional" in requisito.valor %}selected{% endif %}>Funcional</option>  
+                                                    <option value="Functional" {% if "Functional" in requisito.valor %}selected{% endif %}>Functional</option>  
                                                     <option value="Usability" {% if "Usability" in requisito.valor %}selected{% endif %}>Usability</option>                                                    
                                                     <option value="Fault tolerance" {% if "Fault tolerance" in requisito.valor %}selected{% endif %}>Fault tolerance</option>                                                    
                                                     <option value="Scalability" {% if "Scalability" in requisito.valor %}selected{% endif %}>Scalability</option>                                                    
@@ -293,7 +293,7 @@
                                                     <option value="Security" {% if "Security" in requisito.valor %}selected{% endif %}>Security</option>                                                    
                                                     <option value="Legal" {% if "Legal" in requisito.valor %}selected{% endif %}>Legal</option>                                                    
                                                     <option value="Look and Feel" {% if "Look and Feel" in requisito.valor %}selected{% endif %}>Look and Feel</option>                                                    
-                                                    <option value="Availbility" {% if "Availbility" in requisito.valor %}selected{% endif %}>Funcional</option>                                                    
+                                                    <option value="Availbility" {% if "Availbility" in requisito.valor %}selected{% endif %}>Availbility</option>                                                    
                                                     <option value="Maintainability" {% if "Maintainability" in requisito.valor %}selected{% endif %}>Maintainability</option>  
                                                 </select>
 
@@ -555,7 +555,7 @@
     document.getElementById('objects-per-page').addEventListener('change', function () {
         
         objectsPerPage = parseInt(this.value);
-        console.log(objectsPerPage)
+        currentPage=1
         showPage(currentPage);
     });
 });
@@ -617,7 +617,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let objectsPerPage = 10;
 
     function showPage(page) {
-        console.log(page)
         const start = (page - 1) * objectsPerPage;
         const end = start + objectsPerPage;
         rows.forEach((row, index) => {
@@ -656,7 +655,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function goToNextPage() {
         
         const maxPage = Math.ceil(rows.length / objectsPerPage);
-        console.log(rows.length )
         if (currentPage < maxPage) {
             currentPage++;
             showPage(currentPage);
@@ -672,6 +670,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('objects-per-page-1').addEventListener('change', function () {
         
         objectsPerPage = parseInt(this.value);
+        currentPage=1
         showPage(currentPage);
     });
 });

@@ -30,18 +30,18 @@
       background-color: #1e90ff;
     }
 
-    #checkboxes2 {
+    .checkboxes2 {
       display: none;
       border: 1px #dadada solid;
       max-height: 150px;
       overflow: auto;
     }
   
-    #checkboxes2 label {
+    .checkboxes2 label {
       display: block;
     }
   
-    #checkboxes2 label:hover {
+    .checkboxes2 label:hover {
       background-color: #1e90ff;
     }
   </style>
@@ -213,10 +213,10 @@
                                         <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
                                         <select name="tipo_projeto" class="form-control">
 
-                                            <option value="usecase">Diagrama de Caso de Uso</option>
-                                            <option value="seq">Diagrama de Sequencia</option>
-                                            <option value="block">Diagrama de Bloco</option>
-                                            <option value="machine">Diagrama de Máquina de Estado</option>
+                                            <option value="Caso de Uso">Diagrama de Caso de Uso</option>
+                                            <option value="Sequencia">Diagrama de Sequencia</option>
+                                            <option value="Bloco">Diagrama de Bloco</option>
+                                            <option value="Máquina de Estado">Diagrama de Máquina de Estado</option>
                                         </select>
 
                                         <label for="projeto-requisitos" >Lista de Requisitos do Projeto:</label>
@@ -326,17 +326,17 @@
                                     
                                     <label for="projeto-nome" class="col-form-label">Tipo do Diagrama:</label>
                                     <select name="tipo_projeto">
-                                        <option value="usecase" {% if "usecase" in modelagem.tipo %}selected{% endif %}>Diagrama de Caso de Uso</option>
-                                        <option value="seq" {% if "seq" in modelagem.tipo %}selected{% endif %}>Diagrama de Sequencia</option>
-                                        <option value="block" {% if "block" in modelagem.tipo %}selected{% endif %}>Diagrama de Bloco</option>
-                                        <option value="machine" {% if "machine" in modelagem.tipo %}selected{% endif %}>Diagrama de Máquina de Estado</option>
+                                        <option value="usecase" {% if "Caso de Uso" in modelagem.tipo %}selected{% endif %}>Diagrama de Caso de Uso</option>
+                                        <option value="seq" {% if "Sequencia" in modelagem.tipo %}selected{% endif %}>Diagrama de Sequencia</option>
+                                        <option value="block" {% if "Bloco" in modelagem.tipo %}selected{% endif %}>Diagrama de Bloco</option>
+                                        <option value="machine" {% if "Máquina de Estado" in modelagem.tipo %}selected{% endif %}>Diagrama de Máquina de Estado</option>
                                     </select>
                                     <label for="projeto-requisitos" >Lista de Requisitos do Projeto:</label>
                                     <div class="multiselect">
-                                        <div class="selectBox form-control" onclick="showCheckboxes2()">
+                                        <div class="selectBox form-control" onclick="showCheckboxes2('{{chave}}')">
                                             <option value="" selected>Selecione os requisitos</option>
                                         </div>
-                                        <div id="checkboxes2">
+                                        <div id="checkboxes2{{chave}}" class="checkboxes2">
                                         {% for requisito in requisitos %}
                                         <label for="{{chave}}">
                                             <input type="checkbox" name="checkbox" value="{{requisito.chave}}" {% if requisito.chave in modelagem.requisitos %}checked{% endif %}/>{{ requisito.valor|first }} | {{ requisito.valor|slice:"1:2"|first}}</label>
@@ -441,8 +441,8 @@
       }
     }
     var expanded2 = false;
-    function showCheckboxes2() {
-      var checkboxes2 = document.getElementById("checkboxes2");
+    function showCheckboxes2(id) {
+      var checkboxes2 = document.getElementById("checkboxes2"+id);
       if (!expanded2) {
         checkboxes2.style.display = "block";
         expanded2 = true;
