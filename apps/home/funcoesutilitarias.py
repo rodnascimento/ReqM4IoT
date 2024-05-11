@@ -352,21 +352,13 @@ class Contextualizacao:
         df_tfidfvect = pd.DataFrame(data=tfidf_wm.toarray(), columns=palavras)
         palavras_smart=list(self.dicionario_palavras_smart.keys())
         df = df_tfidfvect
-        if self.peso["centroids"]==False:
-            n = 2
-            kmeans = KMeans(n_clusters=n, random_state=0,n_init=10)
-            kmeans.fit(df)
-            labels = kmeans.labels_
-            self.peso['centroids'] = kmeans.cluster_centers_.tolist()
-            self.peso['labels'] = kmeans.labels_.tolist()
-            
-        else:
-            modelo_carregado = KMeans(n_clusters=len(self.peso['centroids']))
-            modelo_carregado.cluster_centers_ = np.array(self.peso['centroids'])
-            modelo_carregado.labels_ = np.array(self.peso['labels'])
-            labels = modelo_carregado.labels_
-            #labels = modelo_carregado.predict(df)
-        
+        #if self.peso["centroids"]==False:
+        n = 2
+        kmeans = KMeans(n_clusters=n, random_state=0,n_init=10)
+        kmeans.fit(df)
+        labels = kmeans.labels_
+        self.peso['centroids'] = kmeans.cluster_centers_.tolist()
+        self.peso['labels'] = kmeans.labels_.tolist()
         classe_0 = [not bool(x) for x in labels]
         classe_1 = [bool(x) for x in labels]
         classe_0 = df[classe_0]
